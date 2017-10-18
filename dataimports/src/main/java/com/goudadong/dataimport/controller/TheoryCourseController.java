@@ -50,8 +50,11 @@ public class TheoryCourseController {
 		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
 		PageData pdData = theoryCourseService.getMaxId();
-		Object object = pdData.get("MAX_ID");
-		int maxid = Integer.parseInt(object.toString());
+		int maxid = 0;
+		if(pdData!=null){
+			Object object = pdData.get("MAX_ID");
+			maxid = Integer.parseInt(object.toString());
+		}
 		for (PageData pageData : list) {
 			maxid++;
 			//总学时
@@ -83,7 +86,13 @@ public class TheoryCourseController {
 			}
 			if(pageData.containsKey("kclb")){
 				//去空格
-				String kclb = pageData.get("kclb").toString().trim();
+				String kclbtemp = pageData.get("kclb").toString().trim();
+				int kclb = Integer.parseInt(kclbtemp);
+				if(kclb==0){
+					kclb = 1;
+				}else{
+					kclb = 2;
+				}
 				pageData.put("kclb", kclb);
 			}
 			pageData.put("totalHours", zxs);

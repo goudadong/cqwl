@@ -26,11 +26,11 @@
 <h2>重庆文理学院数据导入</h2>
 	<div style="margin-left: 5em;font-size:20px;">
 		<ul>
-			<!-- <li><a  href="campus/camplist">校区表</a></li>
+			<li><a  href="campus/camplist">校区表</a></li>
 			<li><a href="building/buildlist">楼栋信息表</a></li>
 			<li><a href="teachPlace/teachPlacelist">教学场地表</a></li> 
 			<li><a href="institution/institutionlist">承担单位信息表</a></li>
-			<li><a href="theoryCourse/theoryCourselist">课程环节表</a></li>-->
+			<li><a href="theoryCourse/theoryCourselist">课程环节表</a></li>
 			<li><a href="openCourseSchedule/openCourseSchedulelist">课程开课计划表</a></li>
 			<li><a href="publicOptionalCourse/publicOptionalCourseList">公选课计划表</a></li>
 			<li><a href="teacherClass/updatelist">课程教学班表</a></li>

@@ -32,8 +32,8 @@
 			experimentHours,
 			practiceHours,
 			otherHours,
-			courseType
-			
+			courseType,
+			COURSEORPRACTICE
 			
 		) values (
 			#{mainId,jdbcType=INTEGER},
@@ -51,7 +51,8 @@
 			#{SYXS,jdbcType=FLOAT},
 			#{sjxs,jdbcType=FLOAT},
 			#{qtxs,jdbcType=FLOAT},
-			#{p_flag,jdbcType=VARCHAR}
+			#{p_flag,jdbcType=VARCHAR},
+			#{kclb,jdbcType=INTEGER}
 		)
 	</insert>
 </mapper>
