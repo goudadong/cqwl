@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	<task:scheduler id="taskScheduler" pool-size="100" />
+
+	<task:scheduled-tasks scheduler="taskScheduler">
+		<!-- 每5秒中触发任务 -->
+		<task:scheduled ref="OpenCourseScheduleTask" method="job" cron="5 * *  * * ?" />
+		<!-- 每5秒中触发任务 -->
+		<task:scheduled ref="TeacherClassTask" method="job" cron="5 * *  * * ?" />
+		<!-- 每5秒钟触发任务 -->
+		<task:scheduled ref="StudentSelectResultTask" method="job" cron="5 * * * * ?" />
+		<!-- 每5秒钟触发任务 -->
+		<task:scheduled ref="ScheduResultTask" method="job" cron="5 * * * * ?" />
+		<!-- 每5秒钟触发任务 -->
+		<task:scheduled ref="TeachTaskTask" method="job" cron="5 * * * * ?" />
+	</task:scheduled-tasks>
+
+	<!-- 开课计划表同步任务 -->
+	<bean id="OpenCourseScheduleTask" class="com.goudadong.dataimport.task.OpenCourseScheduleTask"></bean>
+	<!-- 教学班表同步任务 -->
+	<bean id="TeacherClassTask" class="com.goudadong.dataimport.task.TeacherClassTask"></bean>
+	<!-- 选课结果表同步任务 -->
+	<bean id="StudentSelectResultTask" class="com.goudadong.dataimport.task.StudentSelectResultTask"></bean>
+	<!-- 排课结果表同步任务 -->
+	<bean id="ScheduResultTask" class="com.goudadong.dataimport.task.ScheduResultTask"></bean>
+	<!-- 教学任务表同步任务 -->
+	<bean id="TeachTaskTask" class="com.goudadong.dataimport.task.TeachTaskTask"></bean>
+</beans>

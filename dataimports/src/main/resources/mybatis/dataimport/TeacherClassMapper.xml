@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TeacherClassMapper">
+	
+	<select id="teacherClassList" resultType="pd">
+		SELECT
+			DISTINCT
+			[xn],
+			[xq_id],
+			[KCDM],
+			T_SKBJ,
+			ZXS,
+			ZZXS,
+			KSZ,
+			JSZ,
+			b.gh
+		FROM
+			T_KB_KCFB a
+		INNER JOIN [T_ZY_TeacherInfo] b ON a.ZJJS = b.DM 
+		 ORDER BY xn desc
+	</select>
+	
+	<!-- 查询校区 -->
+	<select id="getUpdateList"  resultType="pd">
+		select xq,xq_id,xn,T_SKBJ from T_KB_Task where XQ != '' 
+	</select>
+	
+	<select id="o_teacherClass" resultType="pd">
+		select * from cqwu_teacherClass
+	</select>
+	<select id="getMaxId" resultType="pd">
+		select max(MAINID) as max_Id from cqwu_teacherClass
+	</select>
+	
+	<select id="getMainId" resultType="pd" parameterType="pd">
+		SELECT
+			mainId
+		FROM
+			cqwu_teacherClass
+		WHERE
+			SCHOOLYEAR = #{xn,jdbcType=VARCHAR}
+			AND semester =#{semester,jdbcType=VARCHAR}
+			AND CLASSCODE = #{classCode,jdbcType=VARCHAR}
+			AND courseCode = #{KCDM,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 获取行政班 -->
+	<select id="getBjdm" parameterType="pd" resultType="pd">
+		SELECT
+			BJDM
+		FROM
+			T_KB_KCFB
+		WHERE
+			xn = #{xn}
+		AND xq_id = #{xq_id}
+		AND KCDM = #{KCDM}
+		AND T_SKBJ = #{T_SKBJ}
+	</select>
+	
+	<!-- 获取学生人数 -->
+	<select id="getBjrs" parameterType="pd" resultType="pd">
+		SELECT
+			t_rs bjrs,
+			xq 
+		FROM
+			T_KB_TASK
+		WHERE
+			xn = #{xn}
+		AND xq_id = #{xq_id}
+		AND KCID = #{KCDM}
+		AND T_SKBJ = #{T_SKBJ}
+	</select>
+	
+	<select id="getOrgClassId" parameterType="pd" resultType="String">
+		SELECT
+			ORGANIZATIONID bjdm
+		FROM
+			cqwu_org_class_ext
+		WHERE
+			ORGEXTCLASSID = #{BJDM}
+	</select>
+	
+	<insert id="teacherClass_insert" parameterType="pd">
+		insert into cqwu_teacherClass(
+			MAINID,
+			ISVALID,
+			ISDELETED,
+			SCHOOLYEAR,
+			SEMESTER,
+			COURSECODE,
+			teacherCode,
+			CLASSCODE,
+			CLASSNAME,
+			natureClassList,
+			stuNum,
+			campusCode,
+			reasonCode,
+			manageSysCode,
+			manageHours,
+			manageWeekHours,
+			ISOPEN,
+			isReallySelect
+			
+		) values (
+			#{mainId,jdbcType=INTEGER},
+			#{ISVALID},	
+			#{ISDELETED},
+			#{xn,jdbcType=VARCHAR},
+			#{semester,jdbcType=VARCHAR},	
+			#{KCDM,jdbcType=VARCHAR},
+			#{gh,jdbcType=VARCHAR},	
+			#{classCode,jdbcType=VARCHAR},
+			#{className,jdbcType=VARCHAR},
+			#{natureClassList,jdbcType=VARCHAR},
+			#{stuNum,jdbcType=INTEGER},
+			#{campusCode,jdbcType=VARCHAR},
+			#{reasonCode,jdbcType=VARCHAR},
+			#{manageSysCode,jdbcType=VARCHAR},
+			#{manageHours,jdbcType=INTEGER},
+			#{manageWeekHours,jdbcType=INTEGER},
+			1,
+			1
+		)
+	</insert>
+	
+	<!-- 更新 -->
+	<update id="teacherClass_update" parameterType="pd" >
+		update  cqwu_teacherClass 
+			 <trim prefix="set" suffixOverrides=","> 
+				<if test="gh != null">
+					teacherCode = #{gh,jdbcType=VARCHAR},
+				</if>
+				<if test="natureClassList != null">
+					natureClassList = #{natureClassList,jdbcType=VARCHAR},        
+				</if>
+				<if test="stuNum != null">
+					stuNum = #{stuNum,jdbcType=INTEGER},
+				</if>
+				<if test="manageSysCode != null">
+					manageSysCode = #{manageSysCode,jdbcType=VARCHAR},
+				</if>
+				<if test="manageHours != null">
+					manageHours = #{manageHours,jdbcType=INTEGER},        
+				</if>
+				<if test="manageWeekHours != null">
+					manageWeekHours = #{manageWeekHours,jdbcType=INTEGER},
+				</if>
+				<if test="campusCode != null">
+					campusCode = #{campusCode,jdbcType=VARCHAR},
+				</if>
+			</trim>
+		where mainId = #{mainId}
+	</update>
+	
+	<!-- 更新校区 -->
+	<update id="updateXq" parameterType="pd">
+		update  cqwu_teacherClass 
+		 <trim prefix="set" suffixOverrides=","> 
+				<if test="xq != null">
+					CAMPUSCODE = trim(#{xq,jdbcType=VARCHAR}),
+				</if>
+			</trim>
+		where SCHOOLYEAR = #{xn,jdbcType=VARCHAR} 
+			and SEMESTER =#{semester,jdbcType=VARCHAR} 
+			and COURSECODE =#{courseCode,jdbcType=VARCHAR}
+			and CLASSCODE = #{classCode,jdbcType=VARCHAR}
+		
+	</update>
+	
+	<!-- 删除 -->
+	<delete id="teacherClass_delete" parameterType="pd">
+		delete  from  cqwu_teacherClass  where mainId = #{mainId,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 获取教师编号  -->
+	<select id="getTeacherId" parameterType="pd" resultType="pd">
+		SELECT
+			TEACHERNO
+		FROM
+			CQWU_TEACHERINFO
+		WHERE
+			TEACHERNO = #{gh,jdbcType=VARCHAR}
+	</select>
+	<!-- 获取课程名称  -->
+	<select id="getCourseName" resultType="pd">
+		select COURSENAME from cqwu_theoryCourse where courseCode = #{0}
+	</select>
+</mapper>

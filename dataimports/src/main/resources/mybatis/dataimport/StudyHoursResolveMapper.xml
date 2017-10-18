@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="StudyHoursResolveMapper">
+	
+<!-- 	<select id="o_openCourseSchedule" resultType="pd">
+		select * from cqwu_openCourseSchedule
+	</select> -->
+	<select id="getMaxId" resultType="pd">
+		select max(MAINID) as max_Id from cqwu_studyHoursResolve
+	</select>
+	<insert id="studyHoursResolve_insert" parameterType="pd">
+		insert into cqwu_studyHoursResolve(
+			MAINID,
+			openCourseScheduleId,
+			isPublicCouse,
+			studyHoursOrLinkType,
+			manageSysCode,
+			isValid,
+			isDeleted
+			
+			
+		) values (
+			#{mainId,jdbcType=INTEGER},
+			#{openCourseScheduleId},
+			#{isPublicCouse},
+			#{studyHoursOrLinkType},
+			#{manageSysCode},
+			#{ISVALID},	
+			#{ISDELETED}
+		)
+	</insert>
+</mapper>

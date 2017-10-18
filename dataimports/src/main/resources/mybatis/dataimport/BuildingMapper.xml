@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BuildingMapper">
+	
+	<select id="buildingList" resultType="pd">
+		select * from T_ZY_BUILDING
+	</select>
+	<select id="o_building" resultType="pd">
+		select * from cqwu_building
+	</select>
+	<select id="getMaxId" resultType="pd">
+		select max(MAINID) as max_Id from cqwu_building
+	</select>
+	<insert id="building_insert" parameterType="pd">
+		insert into cqwu_building(
+			MAINID,
+			BUILDINGCODE,
+			BUILDINGNAME,
+			CAMPUSCODE,
+			TYPE_,
+			TOTALFLOORS,
+			STATE_,
+			ISVALID,
+			ISDELETED
+			
+		) values (
+			#{mainId,jdbcType=INTEGER},	
+			#{DM,jdbcType=VARCHAR},	
+			#{MC,jdbcType=VARCHAR},	
+			#{SZWZ,jdbcType=VARCHAR},	
+			#{lx_id,jdbcType=VARCHAR},
+			#{layer,jdbcType=INTEGER},
+			#{status,jdbcType=VARCHAR},
+			#{ISVALID},
+			#{ISDELETED}
+		)
+	</insert>
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CampusMapper">
+	
+	<select id="campusList" resultType="pd">
+		select * from T_ZY_School_Area
+	</select>
+	<select id="o_campus" resultType="pd">
+		select * from cqwu_campus
+	</select>
+	<select id="getMaxId" resultType="pd">
+		select max(MAINID) as max_Id from cqwu_campus
+	</select>
+	<insert id="campus_insert" parameterType="pd">
+		insert into cqwu_campus(
+			ISVALID,	
+			SHORTNAME,	
+			CAMPUSADDRESS,	
+			ISDELETED,	
+			POSTCODE,
+			CAMPUSNAME,
+			CAMPUSCODE,
+			MAINID
+		) values (
+			#{ISVALID},	
+			#{JC},	
+			#{dz},	
+			#{ISDELETED},	
+			#{yzbm,jdbcType=VARCHAR},
+			#{MC},
+			#{user_dm},
+			#{mainId,jdbcType=INTEGER}
+		)
+	</insert>
+</mapper>

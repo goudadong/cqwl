@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Hwadee_OptableMapper">
+	
+	<!-- 查询需要同步的表数据 -->
+	<select id="opTableList" resultType="pd" parameterType="pd">
+		select * from HWADEE_OPTABLE  where tablename =#{tableName} and opState = 0
+	</select>
+	
+	<!-- 更新同步表 -->
+	<update id="hwadee_OpTable_update" parameterType="pd">
+		update HWADEE_OPTABLE set  opState = #{opState},dealtime=GETDATE()  where id =#{id}
+	</update>
+	
+	<!-- 查询青果开课计划表 -->
+	<select id="findByColums_plan" parameterType="pd" resultType="pd">
+		select KCID,CDDW_ID,ZY_ID,NJ,XN as xn,XQ_ID,ZXS,XF,SYXS,SJXS,QTXS,KHFS,KCLB,kclb2,kc_flag 
+		from T_KB_PLAN where 1=1 and XN = #{xn} and XQ_ID = #{xq} and KCID = #{kcid} and xh = #{xh}
+	</select>
+	
+	<!-- 查询青果教学班表 -->
+	<select id="findByColums_class" parameterType="pd" resultType="pd">
+		SELECT
+			DISTINCT
+			[xn],
+			[xq_id],
+			[KCDM],
+			T_SKBJ,
+			ZXS,
+			ZZXS,
+			KSZ,
+			JSZ,
+			b.gh
+		FROM
+			T_KB_KCFB a
+		INNER JOIN [T_ZY_TeacherInfo] b ON a.ZJJS = b.DM 
+			and xn = #{xn} and xq_id = #{xq} and kcdm = #{kcid}
+			and t_skbj = #{skbj} and bjdm = #{bjdm}
+	</select>
+	
+	<!-- 查询青果选课结果表 -->
+	<select id="findByColums_stuselect" parameterType="pd" resultType="pd">
+		select [xn],[xq_id],b.user_xh XS_ID,KC_ID,[kcid] from T_KB_SelKC a 
+		INNER JOIN T_XJ_StudBaseInfo  b ON a.xs_id = b.XH 
+		where a.xn = #{xn} and a.xq_id = #{xq} and a.XS_ID=#{xh} and a.kc_id = #{kcid}
+	</select>
+	<!-- 查询青果选课结果表 -->
+	<select id="findByColums_beforeStuSelect" parameterType="pd" resultType="String">
+		select b.user_xh xh from T_KB_SelKC a 
+		INNER JOIN T_XJ_StudBaseInfo  b ON a.xs_id = b.XH 
+		where a.xn = #{xn} and a.xq_id = #{xq} and a.XS_ID=#{xh} and a.kc_id = #{kcid}
+	</select>
+	
+	<!-- 查询青果排课结果表 -->
+	<select id="findByColums_schedul" parameterType="pd" resultType="pd">
+		SELECT
+			DISTINCT
+			a.[xn],
+			a.[xq_id],
+			a.[KCID] courseCode,
+			a.SKBJ,
+			b.gh ,
+			c.DM teachPlaceCode,
+			a.stimezc,
+			a.jcinfo,
+			a.dsz,
+			a.JCz
+		FROM
+			T_KB_AUTO_TABLE a
+		INNER JOIN T_ZY_TeacherInfo b ON a.JS = b.DM
+		INNER JOIN T_ZY_ClassroomInfo c ON c.dm = a.JSM
+		INNER JOIN T_KB_Task d ON d.T_SKBJ = a.SKBJ and a.XN = d.xn AND a.XQ_ID = d.XQ_ID
+		WHERE 1 =1 and 
+			d.SkbjZCJC != '' and a.JCInfo!='Error' and a.stimezc!='' and a.stimezc!=',0' 
+			and a.xn =#{xn} and a.xq_id = #{xq} and a.skbj = #{skbj} and a.bjdm = #{bjdm} 
+			and a.jcz = #{jcz} and a.dsz = #{dsz} and a.stimezc = #{stimezc} and a.jsm = #{jsm} 
+	</select>
+	
+	<!--  查询教学任务表-->
+	<select id="findByColums_task" parameterType="pd" resultType="pd">
+		SELECT
+			T_SKBJ,
+			xn,
+			xq_id,
+			kcid KCDM,
+			ZXS,
+			ZZXS,
+			JKKSZ KSZ,
+			JKJSZ JSZ,
+			b.gh
+		FROM
+			T_KB_Task a
+		INNER JOIN [T_ZY_TeacherInfo] b ON a.t_ZJJS = b.DM 
+		where xh = #{xh} and xn=#{xn} and xq_id =#{xq}
+	</select>
+	
+</mapper>

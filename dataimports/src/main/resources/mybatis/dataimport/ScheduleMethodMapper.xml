@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ScheduleMethodMapper">
+	<select id="getMaxId" resultType="pd">
+	    select max(mainId) as max_Id from cqwu_scheduleMethod
+	</select>
+	<insert id="scheduleMethod_insert" parameterType="pd">
+		insert into cqwu_scheduleMethod(
+		    mainId,
+			teacherClassId,	
+			studyTimeType,	
+			startWeek,	
+			endWeek,	
+			assignCode,
+			teachPlaceType,
+			capacity,
+			isValid,
+			isDeleted,
+			dataRights
+		) values (
+			#{mainId},	
+			#{teacherClassId},	
+			#{studyTimeType},	
+			#{startWeek},	
+			#{endWeek},
+			#{assignCode},
+			#{teachPlaceType},
+			#{capacity},
+			#{isValid},
+			#{isDeleted},
+			#{dataRights}
+		)
+	</insert>
+	
+	<update id="scheduleMethod_update" parameterType="pd">
+		update cqwu_scheduleMethod set 
+			startWeek = #{startWeek},	
+			endWeek = #{endWeek},
+			capacity = #{capacity},
+			dataRights = #{dataRights}
+		where  teacherClassId = #{teacherClassId}
+	</update>
+	<delete id="scheduleMethod_delete"  parameterType="pd">
+		delete cqwu_scheduleMethod where  teacherClassId = #{teacherClassId}
+	</delete>
+</mapper>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SelectCourseTotalMapper">
+	
+	<select id="selectOpenCourseList" resultType="pd">
+		select * from CQWU_OPENCOURSESCHEDULE
+	</select>
+	<select id="selectPublicCourseList" resultType="pd">
+		select * from CQWU_PUBLICOPTIONALCOURSE
+	</select>
+	<select id="getMaxId" resultType="pd">
+		select max(MAINID) as max_Id from cqwu_selectCourseTotal 
+	</select>
+	<!-- 开课计划  -->
+	<insert id="selectOpen_insert" parameterType="pd">
+		insert into cqwu_selectCourseTotal (
+			MAINID,
+			ISVALID,
+			ISDELETED,
+			grade,
+			schoolYear,
+			semester,
+			departmentCode,
+			majorCode,
+			courseCode,
+			courseType,
+			courseNature,
+			studyWay,
+			credit,
+			totalHours,
+			theoryHours,
+			practiceHours,
+			experimentHours,
+			practicalTrainingHours,
+			computerHours,
+			otherHours,
+			totalWeeks,
+			weekHours,
+			examMethod,
+			institutionCode,
+			isDegreeCourse,
+			isPreSelect,
+			isReallySelect,
+			isPublicCourse,
+			isOpen
+			
+		) values (
+			#{mainId,jdbcType=INTEGER},
+			#{ISVALID},	
+			#{ISDELETED},
+			#{GRADE,jdbcType=VARCHAR},
+			#{SCHOOLYEAR,jdbcType=VARCHAR},
+			#{SEMESTER,jdbcType=VARCHAR},
+			#{DEPARTMENTCODE,jdbcType=VARCHAR},
+			#{MAJORCODE,jdbcType=VARCHAR},
+			#{COURSECODE,jdbcType=VARCHAR},
+			#{COURSETYPECODE,jdbcType=VARCHAR},
+			#{COURSENATURE,jdbcType=VARCHAR},
+			#{STUDYWAY,jdbcType=VARCHAR},
+			#{CREDIT,jdbcType=VARCHAR},
+			#{TOTALHOURS,jdbcType=INTEGER},
+			#{THEORYHOURS,jdbcType=INTEGER},
+			#{PRACTICEHOURS,jdbcType=INTEGER},
+			#{EXPERIMENTHOURS,jdbcType=INTEGER},
+			#{PRACTICALTRAININGHOURS,jdbcType=INTEGER},
+			#{COMPUTERHOURS,jdbcType=INTEGER},
+			#{OTHERHOURS,jdbcType=INTEGER},
+			#{TOTALWEEKS,jdbcType=INTEGER},
+			#{WEEKHOURS,jdbcType=INTEGER},
+			#{EXAMMETHOD,jdbcType=VARCHAR},
+			#{INSTITUTIONCODE,jdbcType=VARCHAR},
+			#{ISDEGREECOURSE,jdbcType=VARCHAR},
+			1,
+			1,
+			0,
+			1
+		)
+	</insert>
+	<!-- 公共课 -->
+	<insert id="selectPublic_insert" parameterType="pd">
+		insert into cqwu_selectCourseTotal (
+			MAINID,
+			ISVALID,
+			ISDELETED,
+			schoolYear,
+			semester,
+			courseCode,
+			courseNature,
+			studyWay,
+			credit,
+			totalHours,
+			theoryHours,
+			practiceHours,
+			experimentHours,
+			practicalTrainingHours,
+			computerHours,
+			otherHours,
+			weekHours,
+			examMethod,
+			institutionCode,
+			isPreSelect,
+			isReallySelect,
+			isPublicCourse,
+			isOpen
+			
+		) values (
+			#{mainId,jdbcType=INTEGER},
+			#{ISVALID},	
+			#{ISDELETED},
+			#{SCHOOLYEAR,jdbcType=VARCHAR},
+			#{SEMESTER,jdbcType=VARCHAR},
+			#{COURSECODE,jdbcType=VARCHAR},
+			#{COURSENATURE,jdbcType=VARCHAR},
+			#{STUDYWAY,jdbcType=VARCHAR},
+			#{CREDIT,jdbcType=VARCHAR},
+			#{TOTALHOURS,jdbcType=INTEGER},
+			#{THEORYHOURS,jdbcType=INTEGER},
+			#{PRACTICEHOURS,jdbcType=INTEGER},
+			#{EXPERIMENTHOURS,jdbcType=INTEGER},
+			#{PRACTICALTRAININGHOURS,jdbcType=INTEGER},
+			#{COMPUTERHOURS,jdbcType=INTEGER},
+			#{OTHERHOURS,jdbcType=INTEGER},
+			#{WEEKHOURS,jdbcType=INTEGER},
+			#{EXAMMETHOD,jdbcType=VARCHAR},
+			#{INSTITUTIONCODE,jdbcType=VARCHAR},
+			1,
+			1,
+			1,
+			1
+		)
+	</insert>
+</mapper>

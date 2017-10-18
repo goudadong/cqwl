@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="StudentSelectResultMapper">
+	
+	<select id="studentSelectResultList" resultType="pd">
+		select [xn],[xq_id],b.user_xh XS_ID,KC_ID,[kcid] from T_KB_SelKC a INNER JOIN T_XJ_StudBaseInfo  b ON a.xs_id = b.XH
+	</select>
+	<select id="o_studentSelectResult" resultType="pd">
+		select * from cqwu_studentSelectResult
+	</select>
+	<select id="getMaxId" resultType="pd">
+		select max(MAINID) as max_Id from cqwu_studentSelectResult
+	</select>
+	
+	<select id="getMainId" resultType="pd" parameterType="pd">
+		SELECT
+			mainId
+		FROM
+			cqwu_studentSelectResult
+		WHERE
+			STUDENTCODE = #{studentNo,jdbcType=VARCHAR}
+			and TEACHCLASSID =#{teachClassId,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="studentSelectResult_insert" parameterType="pd">
+		insert into cqwu_studentSelectResult(
+			MAINID,
+			ISVALID,
+			ISDELETED,
+			teachClassId,
+			studentCode,
+			flag
+			
+		) values (
+			#{mainId,jdbcType=INTEGER},
+			#{ISVALID},	
+			#{ISDELETED},
+			#{teachClassId},
+			#{XS_ID,jdbcType=VARCHAR},	
+			2
+		)
+	</insert>
+	
+	
+	<!-- 更新 -->
+	<update id="studentSelectResult_update" parameterType="pd" >
+		update  cqwu_studentSelectResult 
+			 <trim prefix="set" suffixOverrides=","> 
+				<if test="XS_ID != null">
+					studentCode = #{XS_ID,jdbcType=VARCHAR},
+				</if>
+				<if test="teachClassId != null">
+					teachClassId = #{teachClassId,jdbcType=VARCHAR},        
+				</if>
+			</trim>
+		where mainId = #{mainId}
+	</update>
+	<!-- 删除 -->
+	<delete id="studentSelectResult_delete" parameterType="pd">
+		delete  from  cqwu_studentSelectResult  where mainId = #{mainId,jdbcType=INTEGER}
+	</delete>
+	<!-- 获取教学班id -->
+	<select id="getTeachClassId" parameterType="pd" resultType="pd">
+		select mainId from cqwu_teacherClass 
+			where 1=1 
+			and SCHOOLYEAR = #{xn,jdbcType=VARCHAR} 
+			and SEMESTER = #{xq,jdbcType=VARCHAR}
+			and	COURSECODE = #{kcid,jdbcType=VARCHAR}
+			and	CLASSCODE = #{classCode,jdbcType=VARCHAR}
+			and  rownum =1
+	</select>
+</mapper>

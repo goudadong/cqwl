@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TeachPlaceMapper">
+	
+	<select id="teachPlaceList" resultType="pd">
+		select * from T_ZY_ClassroomInfo
+	</select>
+	<select id="o_teachPlace" resultType="pd">
+		select * from cqwu_teachPlace
+	</select>
+	<select id="getMaxId" resultType="pd">
+		select max(MAINID) as max_Id from cqwu_teachPlace
+	</select>
+	<insert id="teachPlace_insert" parameterType="pd">
+		insert into cqwu_teachPlace(
+			MAINID,
+			ISVALID,
+			ISDELETED,
+			teachPlaceName,
+			teachPlaceCODE,
+			teachPlaceTYPE,
+			CAMPUSCODE,
+			buildingCode,
+			capacity,
+			floor,
+			houseNumber
+			
+		) values (
+			#{mainId,jdbcType=INTEGER},
+			#{ISVALID},	
+			#{ISDELETED},
+			#{MC,jdbcType=VARCHAR},
+			#{DM,jdbcType=VARCHAR},	
+			#{LX_ID,jdbcType=VARCHAR},	
+			#{school_area},
+			#{SZWZ,jdbcType=VARCHAR},
+			#{RL,jdbcType=INTEGER},
+			#{Layer,jdbcType=INTEGER},
+			#{MPH,jdbcType=VARCHAR}
+		)
+	</insert>
+</mapper>

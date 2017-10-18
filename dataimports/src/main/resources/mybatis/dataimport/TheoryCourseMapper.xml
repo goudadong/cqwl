@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TheoryCourseMapper">
+	
+	<select id="theoryCourseList" resultType="pd">
+		select DM,ZWMC,CDDW_ID,ZXF,ZXS,SYXS,sjxs,qtxs,user_kcid,p_flag,kclb from T_JH_SetlessonInfo
+	</select>
+	<select id="o_theoryCourse" resultType="pd">
+		select * from cqwu_theoryCourse
+	</select>
+	<select id="getCourseByCode" resultType="pd">
+		select * from cqwu_theoryCourse where courseCode = #{0}
+	</select>
+	<select id="getMaxId" resultType="pd">
+		select max(MAINID) as max_Id from cqwu_theoryCourse
+	</select>
+	<insert id="theoryCourse_insert" parameterType="pd">
+		insert into cqwu_theoryCourse(
+			MAINID,
+			ISVALID,
+			ISDELETED,
+			theoryHours,
+			versionCode,
+			isAvailable,
+			courseCode,
+			user_courseCode,
+			courseName,
+			institutionsCode,
+			credit,
+			totalHours,
+			experimentHours,
+			practiceHours,
+			otherHours,
+			courseType
+			
+			
+		) values (
+			#{mainId,jdbcType=INTEGER},
+			#{ISVALID},	
+			#{ISDELETED},
+			#{ZXS,jdbcType=FLOAT},
+			'2017',
+			1,	
+			#{DM,jdbcType=VARCHAR},	
+			#{user_kcid,jdbcType=VARCHAR},	
+			#{ZWMC,jdbcType=VARCHAR},
+			#{CDDW_ID,jdbcType=VARCHAR},
+			#{ZXF,jdbcType=FLOAT},
+			#{totalHours,jdbcType=FLOAT},
+			#{SYXS,jdbcType=FLOAT},
+			#{sjxs,jdbcType=FLOAT},
+			#{qtxs,jdbcType=FLOAT},
+			#{p_flag,jdbcType=VARCHAR}
+		)
+	</insert>
+</mapper>

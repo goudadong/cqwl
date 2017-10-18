@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpenCourseScheduleMapper">
+	
+	<select id="openCourseScheduleList" resultType="pd">
+		select KCID,CDDW_ID,ZY_ID,NJ,XN as xn,XQ_ID,ZXS,XF,SYXS,SJXS,QTXS,KHFS,KCLB,kclb2,kc_flag from T_KB_PLAN where
+		 KCLB != '03' or kclb2 != '01'
+	</select>
+	<select id="o_openCourseSchedule" resultType="pd">
+		select * from cqwu_openCourseSchedule
+	</select>
+	<select id="getMaxId" resultType="pd">
+		select max(MAINID) as max_Id from cqwu_openCourseSchedule
+	</select>
+	
+	<select id="getMainId" resultType="pd" parameterType="pd">
+		SELECT
+			mainId
+		FROM
+			cqwu_openCourseSchedule
+		WHERE
+			SCHOOLYEAR = #{xn,jdbcType=VARCHAR}
+			AND semester =#{semester,jdbcType=VARCHAR}
+			AND majorCode = #{majorOrgId,jdbcType=VARCHAR}
+			AND grade = #{NJ,jdbcType=VARCHAR}	
+			AND courseCode = #{KCID,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getMajorOrgId"  resultType="pd">
+		select ORGANIZATIONID from CQWU_ORG_MAJOR_EXT where ORGEXTSPECIALID = #{0}
+	</select>
+	<select id="getDepartmentOrgId"  resultType="pd">
+		SELECT PARENTORGANIZATIONID from ORGANIZATION_ where ORGANIZATIONID = #{0}
+	</select>
+	<insert id="openCourseSchedule_insert" parameterType="pd">
+		insert into cqwu_openCourseSchedule(
+			MAINID,
+			ISVALID,
+			ISDELETED,
+			isresolve,
+			Isopen,
+			courseCode,
+			institutionCode,
+			departmentCode,
+			majorCode,
+			grade,
+			schoolYear,
+			semester,
+			theoryHours,
+			credit,
+			experimentHours,
+			practiceHours,
+			otherHours,
+			examMethod,
+			totalHours,
+			courseNature,
+			studyWay
+			
+			
+		) values (
+			#{mainId,jdbcType=INTEGER},
+			#{ISVALID},	
+			#{ISDELETED},
+			1,
+			1,
+			#{KCID,jdbcType=VARCHAR},
+			#{CDDW_ID,jdbcType=VARCHAR},	
+			#{departmentOrgId,jdbcType=VARCHAR},	
+			#{majorOrgId,jdbcType=VARCHAR},	
+			#{NJ,jdbcType=VARCHAR},
+			#{xn,jdbcType=VARCHAR},
+			#{semester,jdbcType=VARCHAR},
+			#{ZXS,jdbcType=INTEGER},
+			#{XF,jdbcType=FLOAT},
+			#{SYXS,jdbcType=INTEGER},
+			#{SJXS,jdbcType=INTEGER},
+			#{QTXS,jdbcType=INTEGER},
+			#{KHFS,jdbcType=VARCHAR},
+			#{totalHours,jdbcType=FLOAT},
+			#{courseNature},
+			#{studyWay}
+		)
+	</insert>
+	
+	<!-- 更新 -->
+	<update id="openCourseSchedule_update" parameterType="pd" >
+		update  cqwu_openCourseSchedule 
+			 <trim prefix="set" suffixOverrides=","> 
+			<if test="CDDW_ID != null">
+				institutionCode = #{CDDW_ID,jdbcType=VARCHAR},
+			</if>
+			<if test="ZXS != null">
+				theoryHours = #{ZXS,jdbcType=INTEGER},        
+			</if>
+			<if test="XF != null">
+				credit = #{XF,jdbcType=FLOAT},
+			</if>
+			<if test="SYXS != null">
+				experimentHours = #{SYXS,jdbcType=INTEGER},
+			</if>
+			<if test="SJXS != null">
+				practiceHours = #{SJXS,jdbcType=INTEGER},
+			</if>
+			<if test="QTXS != null">
+				otherHours = #{QTXS,jdbcType=INTEGER},
+			</if>
+			<if test="KHFS != null">
+				examMethod = #{KHFS,jdbcType=VARCHAR},
+			</if>
+			<if test="totalHours != null">
+				totalHours = #{totalHours,jdbcType=FLOAT},
+			</if>
+			<if test="courseNature != null">
+				courseNature =#{courseNature},
+			</if>
+			<if test="studyWay != null">
+				studyWay  = #{studyWay},
+			</if>
+			</trim>
+		where mainId = #{mainId}
+	</update>
+	<!-- 删除 -->
+	<delete id="openCourseSchedule_delete" parameterType="pd">
+		delete  from  cqwu_openCourseSchedule  where mainId = #{mainId,jdbcType=INTEGER}
+	</delete>
+	
+</mapper>
