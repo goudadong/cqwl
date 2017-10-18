@@ -70,4 +70,89 @@ public class TeachPlaceController {
 		return mv;
 	}
 	
+	
+	
+	
+	/**
+	 * @return
+	 * 教室
+	 * @throws Exception
+	 */
+	@RequestMapping(value="classroomlist") 
+	public ModelAndView classroomlist() throws Exception{
+		//切换数据库
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+		List<PageData> list =  teachPlaceService.teachPlaceList(null);
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("list", list);
+		mv.addObject("url", "saveClassRoom");
+		mv.setViewName("index");
+		return mv;
+	}
+	
+	@RequestMapping(value="saveClassRoom")
+	public ModelAndView saveClassRoom() throws Exception {
+		List<PageData> list =  teachPlaceService.teachPlaceList(null);
+		//切换数据库
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
+		PageData pdData = teachPlaceService.getMaxId();
+		int maxid = 0;
+		if(pdData!=null){
+			Object object = pdData.get("MAX_ID");
+			maxid = Integer.parseInt(object.toString());
+		}
+		for (PageData pageData : list) {
+			if(!pageData.getString("LX_ID").equals("17")&& pageData.getString("TYPE_FLAG").equals("01")){
+				maxid++;
+				pageData.put("mainId", maxid);
+				pageData.put("ISVALID", 1);
+				pageData.put("ISDELETED", 0);
+				teachPlaceService.classroom_insert(pageData);
+			}
+			
+		}
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("list", list);
+		mv.setViewName("success");
+		return mv;
+	}
+	
+	@RequestMapping(value="gymnasiumList")
+	public ModelAndView gymnasiumList() throws Exception{
+		//切换数据库
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+		List<PageData> list =  teachPlaceService.teachPlaceList(null);
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("list", list);
+		mv.addObject("url", "savegymnasium");
+		mv.setViewName("index");
+		return mv;
+	}
+	@RequestMapping(value="savegymnasium")
+	public ModelAndView savegymnasium() throws Exception {
+		List<PageData> list =  teachPlaceService.teachPlaceList(null);
+		//切换数据库
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
+		PageData pdData = teachPlaceService.getMaxId();
+		int maxid = 0;
+		if(pdData!=null){
+			Object object = pdData.get("MAX_ID");
+			maxid = Integer.parseInt(object.toString());
+		}
+		for (PageData pageData : list) {
+			if(pageData.getString("LX_ID").equals("17")){
+				maxid++;
+				pageData.put("mainId", maxid);
+				pageData.put("ISVALID", 1);
+				pageData.put("ISDELETED", 0);
+				teachPlaceService.gymnasium_insert(pageData);
+			}
+		}
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("list", list);
+		mv.setViewName("success");
+		return mv;
+	}
+	
+	
 }

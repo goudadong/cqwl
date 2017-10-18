@@ -49,4 +49,12 @@ public class TeachPlaceService {
 	public void teachPlace_insert(PageData pd) throws Exception{
 		dao.save("TeachPlaceMapper.teachPlace_insert", pd);
 	}
+	
+	public void classroom_insert(PageData pd) throws Exception {
+		dao.save("TeachPlaceMapper.classroom_insert", pd);
+	}
+	
+	public void gymnasium_insert(PageData pd) throws Exception {
+		dao.save("TeachPlaceMapper.gymnasium_insert", pd);
+	}
 }
