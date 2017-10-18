@@ -29,6 +29,8 @@
 			<li><a  href="campus/camplist">校区表</a></li>
 			<li><a href="building/buildlist">楼栋信息表</a></li>
 			<li><a href="teachPlace/teachPlacelist">教学场地表</a></li> 
+			<li><a href="teachPlace/classroomlist">教室表</a></li>
+			<li><a href="teachPlace/gymnasiumList">体育场馆表</a></li>
 			<li><a href="institution/institutionlist">承担单位信息表</a></li>
 			<li><a href="theoryCourse/theoryCourselist">课程环节表</a></li>
 			<li><a href="openCourseSchedule/openCourseSchedulelist">课程开课计划表</a></li>

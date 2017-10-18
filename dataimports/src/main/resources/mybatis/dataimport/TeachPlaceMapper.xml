@@ -40,4 +40,58 @@
 			#{MPH,jdbcType=VARCHAR}
 		)
 	</insert>
+	
+	<!-- 教室信息 -->
+	<insert id="classroom_insert" parameterType="pd">
+		insert into cqwu_classroom(
+			MAINID,
+			ISVALID,
+			ISDELETED,
+			classroomName,
+			classroomCode,
+			CAMPUSCODE,
+			buildingCode,
+			capacity,
+			floor,
+			houseNumber
+			
+		) values (
+			#{mainId,jdbcType=INTEGER},
+			#{ISVALID},	
+			#{ISDELETED},
+			#{MC,jdbcType=VARCHAR},
+			#{DM,jdbcType=VARCHAR},	
+			#{school_area},
+			#{SZWZ,jdbcType=VARCHAR},
+			#{RL,jdbcType=INTEGER},
+			#{Layer,jdbcType=INTEGER},
+			#{MPH,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 体育场地 -->
+	<insert id="gymnasium_insert" parameterType="pd">
+		insert into cqwu_gymnasium(
+			MAINID,
+			ISVALID,
+			ISDELETED,
+			GYMNASIUMCODE,
+			CAMPUSCODE,
+			buildingCode,
+			capacity,
+			usableArea,
+			STATE_
+			
+		) values (
+			#{mainId,jdbcType=INTEGER},
+			#{ISVALID},	
+			#{ISDELETED},
+			#{DM,jdbcType=VARCHAR},	
+			#{school_area},
+			#{SZWZ,jdbcType=VARCHAR},
+			#{RL,jdbcType=INTEGER},
+			#{symj,jdbcType=FLOAT},
+			1
+		)
+	</insert>
 </mapper>
