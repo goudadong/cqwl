@@ -209,7 +209,7 @@
 	
 	<!-- 删除行政班 -->
 	<delete id="natureClass_delete"  parameterType="pd">
-		delete  from  cqwu_teacherClass  where teachClassId = #{mainId,jdbcType=INTEGER}
+		delete  from  cqwu_teach_Nature  where teachClassId = #{mainId,jdbcType=INTEGER}
 	</delete>
 	
 	<!-- 获取教师编号  -->

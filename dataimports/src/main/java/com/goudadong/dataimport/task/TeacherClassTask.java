@@ -17,7 +17,6 @@ import com.goudadong.dataimport.util.DataSourceConst;
 import com.goudadong.dataimport.util.DataSourceContextHolder;
 import com.goudadong.dataimport.util.PageData;
 import com.goudadong.dataimport.util.PropertiesUtil;
-import com.goudadong.dataimport.util.SetXnUtil;
 
 public class TeacherClassTask {
 
@@ -170,15 +169,15 @@ public class TeacherClassTask {
 					teacherClassService.natureClass_update(pageData);
 				}
 				//学年
-				SetXnUtil.setXn(pageData);
-				teacherClassService.teacherClass_update(pageData);
-				scheduleMethod_update(pageData);
+				//SetXnUtil.setXn(pageData);
+				//teacherClassService.teacherClass_update(pageData);
+				//scheduleMethod_update(pageData);
 			}
 			if (flag==2) {
 				pageData =  getOracleData(data);
 				teacherClassService.natureClass_delete(pageData);
-				teacherClassService.teacherClass_delete(pageData);
-				scheduleMethod_delete(pageData);
+				//teacherClassService.teacherClass_delete(pageData);
+				//scheduleMethod_delete(pageData);
 			}
 			if (flag==3) {
 				pageData = getOracleData(data);
@@ -203,10 +202,10 @@ public class TeacherClassTask {
 					teacherClassService.insertTeachNature(pageData);
 				}
 				//学年
-				SetXnUtil.setXn(pageData);
-				teacherClassService.teacherClass_insert(pageData);
+				//SetXnUtil.setXn(pageData);
+				//teacherClassService.teacherClass_insert(pageData);
 				//插入理论学时排课方式，实践排课不插入
-				scheduleMethod_insert(pageData);
+				//scheduleMethod_insert(pageData);
 				
 			}
 		}
@@ -340,6 +339,7 @@ public class TeacherClassTask {
 		 * @param pageData
 		 * @throws Exception
 		 */
+		@SuppressWarnings("unused")
 		private void scheduleMethod_delete(PageData pageData) throws Exception {
 			PageData scheduleMethodData = new PageData();
 			scheduleMethodData.put("teacherClassId", pageData.get("mainId"));
@@ -352,6 +352,7 @@ public class TeacherClassTask {
 		 * @param pageData
 		 * @throws Exception 
 		 */
+		@SuppressWarnings("unused")
 		private void scheduleMethod_update(PageData pageData) throws Exception {
 			PageData scheduleMethodData = new PageData();
 			scheduleMethodData.put("teacherClassId", pageData.get("mainId"));
