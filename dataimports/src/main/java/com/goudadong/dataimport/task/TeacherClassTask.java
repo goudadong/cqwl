@@ -157,16 +157,54 @@ public class TeacherClassTask {
 			if (flag==1) {
 				pageData =  getOracleData(data);
 				logger.info("开始处理数据:"+pageData.toString());
+				
+				// 切换数据库
+				DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+				List<PageData>  bjdms =  teacherClassService.getBjdm(pageData);
+				for (PageData bjdm : bjdms) { 
+					// 切换数据库
+					DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
+					int teachClassId = Integer.parseInt(pageData.get("mainId").toString());
+					pageData.put("teachClassId", teachClassId);
+					pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
+					teacherClassService.natureClass_update(pageData);
+				}
+				DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
+				//学年
+				SetXnUtil.setXn(pageData);
 				teacherClassService.teacherClass_update(pageData);
 				scheduleMethod_update(pageData);
 			}
 			if (flag==2) {
 				pageData =  getOracleData(data);
+				teacherClassService.natureClass_delete(pageData);
 				teacherClassService.teacherClass_delete(pageData);
 				scheduleMethod_delete(pageData);
 			}
 			if (flag==3) {
 				pageData = getOracleData(data);
+				
+				// 切换数据库
+				DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+				List<PageData>  bjdms =  teacherClassService.getBjdm(pageData);
+				// 切换数据库
+				DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
+				for (PageData bjdm : bjdms) { 
+					int teachClassId = Integer.parseInt(pageData.get("mainId").toString());
+					PageData pdData = teacherClassService.getNatureMaxId();
+					int maxid = 0 ;
+					if(pdData != null){
+						Object object = pdData.get("MAX_ID");
+						maxid = Integer.parseInt(object.toString());
+					}
+					maxid++;
+					pageData.put("naMainid", maxid);
+					pageData.put("teachClassId", teachClassId);
+					pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
+					teacherClassService.insertTeachNature(pageData);
+				}
+				//学年
+				SetXnUtil.setXn(pageData);
 				teacherClassService.teacherClass_insert(pageData);
 				//插入理论学时排课方式，实践排课不插入
 				scheduleMethod_insert(pageData);
@@ -215,33 +253,22 @@ public class TeacherClassTask {
 				pageData.put("className", classCode);
 			}
 			
-			String xzbj = "";
-			// 切换数据库
-			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
-			List<PageData>  bjdms =  teacherClassService.getBjdm(pageData);
 			// 学生人数
 			int bjrs = 0;
 			String campusCode ="";
+			// 切换数据库
+			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 			PageData bjrspd = teacherClassService.getBjrs(pageData);
 			if (bjrspd != null) {
 				bjrs = Integer.parseInt(bjrspd.get("bjrs").toString());
 				if(bjrspd.containsKey("xq")){
-					campusCode = bjrspd.getString("xq");
+					campusCode = bjrspd.getString("xq").trim();
 				}
 			}
 			pageData.put("stuNum", bjrs);
 			pageData.put("campusCode", campusCode);
-			for (PageData bjdm : bjdms) { 
-				// 切换数据库
-				DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
-				xzbj += teacherClassService.getOrgClassId(bjdm)+",";
-			}
-			xzbj = xzbj.substring(0,xzbj.length()-1);
-			pageData.put("natureClassList", xzbj);
 			pageData.put("reasonCode", "0");
 			////班级人数
-			//学年
-			SetXnUtil.setXn(pageData);
 			int zxs = 0; //青果总学时
 			int zzxs = 0; //青果周学时
 			if(pageData.containsKey("ZZXS")){

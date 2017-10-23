@@ -35,7 +35,7 @@
 			<li><a href="theoryCourse/theoryCourselist">课程环节表</a></li>
 			<li><a href="openCourseSchedule/openCourseSchedulelist">课程开课计划表</a></li>
 			<li><a href="publicOptionalCourse/publicOptionalCourseList">公选课计划表</a></li>
-			<li><a href="teacherClass/updatelist">课程教学班表</a></li>
+			<li><a href="teacherClass/teacherClasslist">课程教学班表</a></li>
 			<li><a href="courseTotal/list">选课总表</a></li>
 			<li ><a href="studentSelectResult/studentSelectResultlist" style="color: red;">选课结果表</a></li>
 			<li><a href="scheduResult/list">排课结果表</a></li>

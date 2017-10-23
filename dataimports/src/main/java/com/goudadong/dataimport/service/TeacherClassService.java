@@ -128,4 +128,39 @@ public class TeacherClassService {
 	public PageData getMainId(PageData pd) throws Exception {
 		return  (PageData) dao.findForObject("TeacherClassMapper.getMainId", pd);
 	}
+
+
+	/**
+	 * 行政班最大id
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData getNatureMaxId() throws Exception {
+		return (PageData) dao.findForObject("TeacherClassMapper.getNatureMaxId", null);
+	}
+
+	/**
+	 * 插入行政班
+	 * @param pageData
+	 * @throws Exception
+	 */
+	public void insertTeachNature(PageData pageData) throws Exception {
+		dao.save("TeacherClassMapper.insertTeachNature", pageData);
+	}
+
+
+	public void natureClass_update(PageData pageData) throws Exception {
+		dao.update("TeacherClassMapper.natureClass_update", pageData);
+	}
+
+
+	/**
+	 * 删除行政班
+	 * @param pageData
+	 * @throws Exception
+	 */
+	public void natureClass_delete(PageData pageData) throws Exception {
+		dao.delete("TeacherClassMapper.natureClass_delete", pageData);
+		
+	}
 }

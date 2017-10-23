@@ -32,6 +32,10 @@
 	<select id="getMaxId" resultType="pd">
 		select max(MAINID) as max_Id from cqwu_teacherClass
 	</select>
+	<!-- 获取行政班最大id -->
+	<select id="getNatureMaxId" resultType="pd">
+		select max(MAINID) as max_Id from cqwu_teach_Nature
+	</select>
 	
 	<select id="getMainId" resultType="pd" parameterType="pd">
 		SELECT
@@ -81,6 +85,36 @@
 			ORGEXTCLASSID = #{BJDM}
 	</select>
 	
+	
+	<!-- 行政班id -->
+	<insert id="insertTeachNature" parameterType="pd">
+		insert into cqwu_teach_Nature (
+			mainId,
+			teachClassId,
+			natureClassId,
+			isValid,
+			isDeleted
+		) values (
+			#{naMainid,jdbcType=INTEGER},
+			#{teachClassId,jdbcType=INTEGER},
+			#{natureClassId,jdbcType=VARCHAR},
+			#{ISVALID,jdbcType=INTEGER},	
+			#{ISDELETED,jdbcType=INTEGER}
+		)
+		
+	</insert>
+	
+	<!-- 更新行政班 -->
+	<update id="natureClass_update" parameterType="pd" >
+		update  cqwu_teach_Nature 
+			 <trim prefix="set" suffixOverrides=","> 
+				<if test="natureClassId != null">
+					natureClassId = #{natureClassId,jdbcType=VARCHAR},
+				</if>
+			</trim>
+		where teachClassId = #{teachClassId}
+	</update>
+	
 	<insert id="teacherClass_insert" parameterType="pd">
 		insert into cqwu_teacherClass(
 			MAINID,
@@ -104,8 +138,8 @@
 			
 		) values (
 			#{mainId,jdbcType=INTEGER},
-			#{ISVALID},	
-			#{ISDELETED},
+			#{ISVALID,jdbcType=INTEGER},	
+			#{ISDELETED,jdbcType=INTEGER},
 			#{xn,jdbcType=VARCHAR},
 			#{semester,jdbcType=VARCHAR},	
 			#{KCDM,jdbcType=VARCHAR},
@@ -171,6 +205,11 @@
 	<!-- 删除 -->
 	<delete id="teacherClass_delete" parameterType="pd">
 		delete  from  cqwu_teacherClass  where mainId = #{mainId,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 删除行政班 -->
+	<delete id="natureClass_delete"  parameterType="pd">
+		delete  from  cqwu_teacherClass  where teachClassId = #{mainId,jdbcType=INTEGER}
 	</delete>
 	
 	<!-- 获取教师编号  -->

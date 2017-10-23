@@ -97,10 +97,10 @@ public class TeacherClassController {
 				classData.put("className", classCode);
 			}
 			
-			String xzbj = "";
 			// 切换数据库
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 			List<PageData>  bjdms =  teacherClassService.getBjdm(classData);
+			
 			// 学生人数
 			int bjrs = 0;
 			String campusCode ="";
@@ -116,10 +116,21 @@ public class TeacherClassController {
 			for (PageData bjdm : bjdms) { 
 				// 切换数据库
 				DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
-				xzbj += teacherClassService.getOrgClassId(bjdm)+",";
+				PageData pdDatas = teacherClassService.getNatureMaxId();
+				int naturemaxid = 0 ;
+				if(pdDatas != null){
+					Object object = pdDatas.get("MAX_ID");
+					naturemaxid = Integer.parseInt(object.toString());
+				}
+				naturemaxid++;
+				classData.put("naMainid", naturemaxid);
+				classData.put("teachClassId", maxid);
+				classData.put("ISVALID", 1); 
+				classData.put("ISDELETED", 0);
+				classData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
+				teacherClassService.insertTeachNature(classData);
+				
 			}
-			xzbj = xzbj.substring(0,xzbj.length()-1);
-			classData.put("natureClassList", xzbj);
 			classData.put("reasonCode", "0");
 			////班级人数
 			//学年
