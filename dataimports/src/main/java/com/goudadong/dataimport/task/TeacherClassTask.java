@@ -161,15 +161,14 @@ public class TeacherClassTask {
 				// 切换数据库
 				DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 				List<PageData>  bjdms =  teacherClassService.getBjdm(pageData);
+				// 切换数据库
+				DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
 				for (PageData bjdm : bjdms) { 
-					// 切换数据库
-					DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
 					int teachClassId = Integer.parseInt(pageData.get("mainId").toString());
 					pageData.put("teachClassId", teachClassId);
 					pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
 					teacherClassService.natureClass_update(pageData);
 				}
-				DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
 				//学年
 				SetXnUtil.setXn(pageData);
 				teacherClassService.teacherClass_update(pageData);
