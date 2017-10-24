@@ -321,8 +321,19 @@ public class ScheduResultTask {
 					pageData.put("tempzc", tempzcs[0]);
 					setZcJc(pageData);
 				}
-			}else{
-				 throw new Exception();
+			}else{//新增
+				/**周次**/
+				if (tempzcs.length>1) {//存在多个周次的情况如：01,4-10,12-18
+					//循环周次
+					for (String zc : tempzcs) {
+						pageData.put("tempzc", zc);
+						setZcJc(pageData);
+					}
+					
+				}else{//数据是18或者2-16的时候zcs只有一个
+					pageData.put("tempzc", tempzcs[0]);
+					setZcJc(pageData);
+				}
 			}
 			
 		}

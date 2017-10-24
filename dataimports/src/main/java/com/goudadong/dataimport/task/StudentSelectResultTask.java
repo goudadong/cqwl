@@ -103,7 +103,10 @@ public class StudentSelectResultTask {
 	private void saveData(PageData pData,int flag) throws Exception{
 		String []tableMainIds = pData.getString("tableMainId").split("\\#");//tableMainId=XN:2019|XQ_ID:1|KCID:132292-002|XS_ID:200900003427#XN:2009|XQ_ID:1|KCID:132292-002|XS_ID:200900003427
 		String [] tableMainId = tableMainIds[0].split("\\|");//修改之后的数据
-		String [] beforMainId = tableMainIds[1].split("\\|");//修改之前的数据
+		String [] beforMainId = {};
+		if(tableMainIds.length>1){
+			beforMainId = tableMainIds[1].split("\\|");//修改之前的数据
+		}
 		
 		if (tableMainId.length>1) {
 			PageData pd =new PageData();
@@ -119,11 +122,11 @@ public class StudentSelectResultTask {
 			pd.put("xh", xh);
 			pd = hwadee_OpTableService.findByColums_stuselect(pd);
 			//变之前的数据
+			PageData beforePd = new PageData();
 			String beforeXn = beforMainId[0].split(":")[1].trim();
 			String beforeXq = beforMainId[1].split(":")[1].trim();
 			String beforecourseCode = beforMainId[2].split(":")[1].trim();
 			String beforexh = beforMainId[3].split(":")[1].trim();
-			PageData beforePd = new PageData();
 			beforePd.put("xn", beforeXn);
 			beforePd.put("xq", beforeXq);
 			beforePd.put("kcid", beforecourseCode);
