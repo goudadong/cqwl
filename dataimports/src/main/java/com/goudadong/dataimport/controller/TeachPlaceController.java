@@ -117,6 +117,7 @@ public class TeachPlaceController {
 		return mv;
 	}
 	
+	//体育场馆
 	@RequestMapping(value="gymnasiumList")
 	public ModelAndView gymnasiumList() throws Exception{
 		//切换数据库
@@ -153,6 +154,45 @@ public class TeachPlaceController {
 		mv.setViewName("success");
 		return mv;
 	}
+	
+	
+	//实验室
+		@RequestMapping(value="labBranchList")
+		public ModelAndView labBranchList() throws Exception{
+			//切换数据库
+			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+			List<PageData> list =  teachPlaceService.teachPlaceList(null);
+			ModelAndView mv = new ModelAndView();
+			mv.addObject("list", list);
+			mv.addObject("url", "savelabBranch");
+			mv.setViewName("index");
+			return mv;
+		}
+		@RequestMapping(value="savelabBranch")
+		public ModelAndView savelabBranch() throws Exception {
+			List<PageData> list =  teachPlaceService.teachPlaceList(null);
+			//切换数据库
+			DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
+			PageData pdData = teachPlaceService.getMaxId();
+			int maxid = 0;
+			if(pdData!=null){
+				Object object = pdData.get("MAX_ID");
+				maxid = Integer.parseInt(object.toString());
+			}
+			for (PageData pageData : list) {
+				if(pageData.getString("TYPE_FLAG").equals("02")){
+					maxid++;
+					pageData.put("mainId", maxid);
+					pageData.put("ISVALID", 1);
+					pageData.put("ISDELETED", 0);
+					teachPlaceService.labBranch_insert(pageData);
+				}
+			}
+			ModelAndView mv = new ModelAndView();
+			mv.addObject("list", list);
+			mv.setViewName("success");
+			return mv;
+		}
 	
 	
 }

@@ -94,4 +94,36 @@
 			1
 		)
 	</insert>
+	
+	<!-- 实验室 -->
+	<insert id="labBranch_insert" parameterType="pd">
+		insert into cqwu_labBranch(
+			MAINID,
+			ISVALID,
+			ISDELETED,
+			labsName,
+			labsCode,
+			CAMPUSCODE,
+			buildingCode,
+			capacity,
+			houseNumber,
+			usableArea,
+			floor,
+			STATE_
+			
+		) values (
+			#{mainId,jdbcType=INTEGER},
+			#{ISVALID},	
+			#{ISDELETED},
+			#{MC,jdbcType=VARCHAR},
+			#{DM,jdbcType=VARCHAR},	
+			#{school_area},
+			#{SZWZ,jdbcType=VARCHAR},
+			#{RL,jdbcType=INTEGER},
+			#{MPH,jdbcType=VARCHAR},
+			#{symj,jdbcType=FLOAT},
+			#{Layer,jdbcType=INTEGER},
+			1
+		)
+	</insert>
 </mapper>
