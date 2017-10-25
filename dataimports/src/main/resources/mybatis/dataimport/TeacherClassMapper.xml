@@ -180,7 +180,7 @@
 				<if test="manageWeekHours != null">
 					manageWeekHours = #{manageWeekHours,jdbcType=INTEGER},
 				</if>
-				<if test="campusCode != null">
+				<if test="campusCode != null and campusCode !=''">
 					campusCode = #{campusCode,jdbcType=VARCHAR},
 				</if>
 			</trim>
