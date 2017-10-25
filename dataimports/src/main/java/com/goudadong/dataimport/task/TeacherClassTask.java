@@ -17,6 +17,7 @@ import com.goudadong.dataimport.util.DataSourceConst;
 import com.goudadong.dataimport.util.DataSourceContextHolder;
 import com.goudadong.dataimport.util.PageData;
 import com.goudadong.dataimport.util.PropertiesUtil;
+import com.goudadong.dataimport.util.SetXnUtil;
 
 public class TeacherClassTask {
 
@@ -159,6 +160,7 @@ public class TeacherClassTask {
 				
 				// 切换数据库
 				DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+				pageData.put("xn_", pageData.getString("xn").split("\\-")[0]);
 				List<PageData>  bjdms =  teacherClassService.getBjdm(pageData);
 				// 切换数据库
 				DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
@@ -184,6 +186,7 @@ public class TeacherClassTask {
 				
 				// 切换数据库
 				DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+				pageData.put("xn_", pageData.getString("xn").split("\\-")[0]);
 				List<PageData>  bjdms =  teacherClassService.getBjdm(pageData);
 				// 切换数据库
 				DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
@@ -308,6 +311,9 @@ public class TeacherClassTask {
 				pageData.put("manageWeekHours", zzxs); //周学时
 				
 			}
+			
+			//学年
+			SetXnUtil.setXn(pageData);
 			try {
 				PageData pData = new PageData();
 				pData = teacherClassService.getMainId(pageData);

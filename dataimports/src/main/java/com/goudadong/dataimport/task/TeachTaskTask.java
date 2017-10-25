@@ -142,6 +142,8 @@ public class TeachTaskTask {
 			logger.info("开始处理数据:"+pageData.toString());
 			// 切换数据库
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+			pageData.put("xn_", pageData.getString("xn").split("\\-")[0]);
+			
 			List<PageData>  bjdms =  teacherClassService.getBjdm(pageData);
 			// 切换数据库
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
@@ -151,9 +153,6 @@ public class TeachTaskTask {
 				pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
 				teacherClassService.natureClass_update(pageData);
 			}
-			
-			// 学年
-			SetXnUtil.setXn(pageData);
 			teacherClassService.teacherClass_update(pageData);
 			scheduleMethod_update(pageData);
 		}
@@ -167,6 +166,7 @@ public class TeachTaskTask {
 			pageData = getOracleData(data);
 			// 切换数据库
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+			pageData.put("xn_", pageData.getString("xn").split("\\-")[0]);
 			List<PageData>  bjdms =  teacherClassService.getBjdm(pageData);
 			// 切换数据库
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
@@ -184,8 +184,7 @@ public class TeachTaskTask {
 				pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
 				teacherClassService.insertTeachNature(pageData);
 			}
-			// 学年
-			SetXnUtil.setXn(pageData);
+			
 			teacherClassService.teacherClass_insert(pageData);
 			//插入理论学时排课方式，实践排课不插入
 			scheduleMethod_insert(pageData);
@@ -283,6 +282,8 @@ public class TeachTaskTask {
 			pageData.put("manageWeekHours", zzxs); // 周学时
 
 		}
+		// 学年
+		SetXnUtil.setXn(pageData);
 		try {
 			PageData pData = new PageData();
 			pData = teacherClassService.getMainId(pageData);

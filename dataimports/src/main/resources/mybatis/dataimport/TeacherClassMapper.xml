@@ -56,7 +56,7 @@
 		FROM
 			T_KB_KCFB
 		WHERE
-			xn = #{xn}
+			xn = #{xn_}
 		AND xq_id = #{xq_id}
 		AND KCDM = #{KCDM}
 		AND T_SKBJ = #{T_SKBJ}

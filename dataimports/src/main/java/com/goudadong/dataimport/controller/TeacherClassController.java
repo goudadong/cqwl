@@ -99,6 +99,7 @@ public class TeacherClassController {
 			
 			// 切换数据库
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+			classData.put("xn_", classData.getString("xn"));
 			List<PageData>  bjdms =  teacherClassService.getBjdm(classData);
 			
 			// 学生人数
