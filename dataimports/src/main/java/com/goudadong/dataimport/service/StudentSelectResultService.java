@@ -47,8 +47,8 @@ public class StudentSelectResultService {
 		return (PageData) dao.findForObject("StudentSelectResultMapper.getMaxId", null);
 	}
 	
-	public void studentSelectResult_insert(PageData pd) throws Exception{
-		dao.save("StudentSelectResultMapper.studentSelectResult_insert", pd);
+	public int studentSelectResult_insert(PageData pd) throws Exception{
+		return  (int) dao.save("StudentSelectResultMapper.studentSelectResult_insert", pd);
 	}
 	
 	/**
@@ -68,19 +68,21 @@ public class StudentSelectResultService {
 	/**
 	 * 更新
 	 * @param pageData
+	 * @return 
 	 * @throws Exception
 	 */
-	public void studentSelectResult_update(PageData pageData) throws Exception {
-		dao.update("StudentSelectResultMapper.studentSelectResult_update", pageData);
+	public int studentSelectResult_update(PageData pageData) throws Exception {
+		return (int) dao.update("StudentSelectResultMapper.studentSelectResult_update", pageData);
 		
 	}
 	/**
 	 * 删除
 	 * @param data
+	 * @return 
 	 * @throws Exception
 	 */
-	public void studentSelectResult_delete(PageData pageData) throws Exception {
-		dao.delete("StudentSelectResultMapper.studentSelectResult_delete", pageData);
+	public int studentSelectResult_delete(PageData pageData) throws Exception {
+		return (int) dao.delete("StudentSelectResultMapper.studentSelectResult_delete", pageData);
 		
 	}
 }

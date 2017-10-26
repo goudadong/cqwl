@@ -87,8 +87,8 @@ public class TeacherClassService {
 		return (PageData) dao.findForObject("TeacherClassMapper.getCourseName", courseCode);
 	}
 	
-	public void teacherClass_insert(PageData pd) throws Exception{
-		dao.save("TeacherClassMapper.teacherClass_insert", pd);
+	public int teacherClass_insert(PageData pd) throws Exception{
+		return (int) dao.save("TeacherClassMapper.teacherClass_insert", pd);
 	}
 	
 	//获取教师编号
@@ -99,10 +99,11 @@ public class TeacherClassService {
 	/**
 	 * 更新
 	 * @param pageData
+	 * @return 
 	 * @throws Exception
 	 */
-	public void teacherClass_update(PageData pageData) throws Exception {
-		dao.update("TeacherClassMapper.teacherClass_update", pageData);
+	public int teacherClass_update(PageData pageData) throws Exception {
+		return (int) dao.update("TeacherClassMapper.teacherClass_update", pageData);
 		
 	}
 	
@@ -119,10 +120,11 @@ public class TeacherClassService {
 	/**
 	 * 删除
 	 * @param data
+	 * @return 
 	 * @throws Exception
 	 */
-	public void teacherClass_delete(PageData data) throws Exception {
-		dao.delete("TeacherClassMapper.teacherClass_delete", data);
+	public int teacherClass_delete(PageData data) throws Exception {
+		return (int) dao.delete("TeacherClassMapper.teacherClass_delete", data);
 		
 	}
 	public PageData getMainId(PageData pd) throws Exception {
@@ -142,25 +144,27 @@ public class TeacherClassService {
 	/**
 	 * 插入行政班
 	 * @param pageData
+	 * @return 
 	 * @throws Exception
 	 */
-	public void insertTeachNature(PageData pageData) throws Exception {
-		dao.save("TeacherClassMapper.insertTeachNature", pageData);
+	public int insertTeachNature(PageData pageData) throws Exception {
+		return (int) dao.save("TeacherClassMapper.insertTeachNature", pageData);
 	}
 
 
-	public void natureClass_update(PageData pageData) throws Exception {
-		dao.update("TeacherClassMapper.natureClass_update", pageData);
+	public int natureClass_update(PageData pageData) throws Exception {
+		return (int) dao.update("TeacherClassMapper.natureClass_update", pageData);
 	}
 
 
 	/**
 	 * 删除行政班
 	 * @param pageData
+	 * @return 
 	 * @throws Exception
 	 */
-	public void natureClass_delete(PageData pageData) throws Exception {
-		dao.delete("TeacherClassMapper.natureClass_delete", pageData);
+	public int natureClass_delete(PageData pageData) throws Exception {
+		return (int) dao.delete("TeacherClassMapper.natureClass_delete", pageData);
 		
 	}
 }

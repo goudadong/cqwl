@@ -63,26 +63,30 @@ public class StudentSelectResultTask {
 	*/
 	private void SyncData(List<PageData> list) throws Exception{
 		for (PageData pageData : list) {
+			int result =0 ;
 			try {
 				logger.info(pageData.toString());
-				pageData.put("opState", 1);
 				switch (pageData.getString("opType")) {
 				case "update":
-					saveData(pageData,1);//保存数据，1表示更新
-					hwadee_OpTableService.hwadee_OpTable_update(pageData);
+					result = saveData(pageData,1);//保存数据，1表示更新
 					break;
 				case "delete":
-					saveData(pageData,2);//保存数据，2表示删除	
-					hwadee_OpTableService.hwadee_OpTable_update(pageData);
+					result = saveData(pageData,2);//保存数据，2表示删除	
 					break;
 				case "insert":
-					saveData(pageData,3);//保存数据，3表示插入
-					hwadee_OpTableService.hwadee_OpTable_update(pageData);
+					result = saveData(pageData,3);//保存数据，3表示插入
 					break;
 				default:
 					break;
 				}
-				
+				if(result==0){
+					logger.error("同步出现异常,执行没有成功！");
+					pageData.put("opState", -1);
+					hwadee_OpTableService.hwadee_OpTable_update(pageData);
+				}if(result==1){
+					pageData.put("opState", 1);
+					hwadee_OpTableService.hwadee_OpTable_update(pageData);
+				}
 			} catch (Exception e) {
 				logger.error("同步出现异常"+e.getMessage());
 				pageData.put("opState", -1);
@@ -100,58 +104,65 @@ public class StudentSelectResultTask {
 	* @return void    返回类型 
 	* @throws 
 	*/
-	private void saveData(PageData pData,int flag) throws Exception{
-		String []tableMainIds = pData.getString("tableMainId").split("\\#");//tableMainId=XN:2019|XQ_ID:1|KCID:132292-002|XS_ID:200900003427#XN:2009|XQ_ID:1|KCID:132292-002|XS_ID:200900003427
-		String [] tableMainId = tableMainIds[0].split("\\|");//修改之后的数据
-		String [] beforMainId = {};
-		if(tableMainIds.length>1){
-			beforMainId = tableMainIds[1].split("\\|");//修改之前的数据
-		}
-		
-		if (tableMainId.length>1) {
-			PageData pd =new PageData();
+	private int  saveData(PageData pData,int flag) {
+		int result = 0;
+		try {
+			String []tableMainId = pData.getString("tableMainId").split("\\|");//修改之后的数据
+			String []tableMainIdNew = {};
+			if(pData.containsKey("tableMainIdNew")){
+				tableMainIdNew= pData.getString("tableMainIdNew").split("\\|");//修改之前的数据
+			}
 			//变之后的数据
-			String tempXn = tableMainId[0].split(":")[1].trim();
-			String tempXq = tableMainId[1].split(":")[1].trim();
-			String courseCode = tableMainId[2].split(":")[1].trim();
-			String xh = tableMainId[3].split(":")[1].trim();
-			
-			pd.put("xn", tempXn);
-			pd.put("xq", tempXq);
-			pd.put("kcid", courseCode);
-			pd.put("xh", xh);
-			pd = hwadee_OpTableService.findByColums_stuselect(pd);
+			PageData pd =new PageData();
+			PageData findPd = null;
+			if (tableMainId.length>0) {
+				String tempXn = tableMainId[0].split(":")[1].trim();
+				String tempXq = tableMainId[1].split(":")[1].trim();
+				String courseCode = tableMainId[2].split(":")[1].trim();
+				String xh = tableMainId[3].split(":")[1].trim();
+				
+				pd.put("xn", tempXn);
+				pd.put("xq", tempXq);
+				pd.put("kc_id", courseCode);
+				pd.put("xh", xh);
+				String o_xh = hwadee_OpTableService.findByColums_beforeStuSelect(pd);
+				pd.put("studentNo", o_xh);
+				findPd = hwadee_OpTableService.findByColums_stuselect(pd);
+			}
 			//变之前的数据
 			PageData beforePd = new PageData();
-			String beforeXn = beforMainId[0].split(":")[1].trim();
-			String beforeXq = beforMainId[1].split(":")[1].trim();
-			String beforecourseCode = beforMainId[2].split(":")[1].trim();
-			String beforexh = beforMainId[3].split(":")[1].trim();
-			beforePd.put("xn", beforeXn);
-			beforePd.put("xq", beforeXq);
-			beforePd.put("kcid", beforecourseCode);
-			beforePd.put("xh", beforexh);
+			if(tableMainIdNew.length>0){
+				String beforeXn = tableMainIdNew[0].split(":")[1].trim();
+				String beforeXq = tableMainIdNew[1].split(":")[1].trim();
+				String beforecourseCode = tableMainIdNew[2].split(":")[1].trim();
+				String beforexh = tableMainIdNew[3].split(":")[1].trim();
+				beforePd.put("xn", beforeXn);
+				beforePd.put("xq", beforeXq);
+				beforePd.put("kc_id", beforecourseCode);
+				beforePd.put("xh", beforexh);
+				
+				String o_xh = hwadee_OpTableService.findByColums_beforeStuSelect(beforePd);
+				beforePd.put("studentNo", o_xh);
+			}
 			
-			String o_xh = hwadee_OpTableService.findByColums_beforeStuSelect(beforePd);
-			beforePd.put("studentNo", o_xh);
-			logger.info("------------>获取到了数据"+pd);
+			logger.info("------------>获取到了数据"+findPd);
 			//切换数据库
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
 			logger.info("----------->开始处理数据！");
-			try {
-				detalData(pd,beforePd,flag);
-				//切换数据库
-				DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
-			} catch (Exception e) {
-				//切换数据库
-				DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
-				logger.error("同步出现异常"+e.getMessage());
-				pData.put("opState", -1);
-				hwadee_OpTableService.hwadee_OpTable_update(pData);
+			if(findPd!=null){
+				result = detalData(findPd,beforePd,flag);
+			}else if(flag==2){
+				result = detalData(pd,beforePd,flag);
+			}else{
+				logger.info("在更新或者新增时没有查到源数据，请排查！");
 			}
-			logger.info("----------->处理数据结束！");
-			
+			//切换数据库
+			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		logger.info("----------->处理数据结束！");
+		return result;
 	}
 
 
@@ -165,22 +176,59 @@ public class StudentSelectResultTask {
 	* @return void    返回类型 
 	* @throws 
 	*/
-	private void detalData(PageData data,PageData beforePd,int flag) throws Exception {
+	private int  detalData(PageData data,PageData beforePd,int flag) throws Exception {
+		int result = 0;
 		PageData pageData = new PageData();
 		if (flag==1) {
 			pageData =  getOracleData(data,beforePd);
-			studentSelectResultService.studentSelectResult_update(pageData);
+			result= studentSelectResultService.studentSelectResult_update(pageData);
 		}
 		if (flag==2) {
-			pageData =  getOracleData(data,beforePd);
-			studentSelectResultService.studentSelectResult_delete(pageData);
+			pageData =  getDelOracleData(data);
+			result = studentSelectResultService.studentSelectResult_delete(pageData);
 		}
 		if (flag==3) {
 			pageData =getOracleData(data,beforePd);
-			studentSelectResultService.studentSelectResult_insert(pageData);
+			result= studentSelectResultService.studentSelectResult_insert(pageData);
 		}
+		return result;
 	}
 	
+	/**
+	 * 删除
+	 * @param pageData
+	 * @return
+	 * @throws Exception
+	 */
+	private PageData getDelOracleData(PageData pageData) throws Exception {
+		
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
+		//设置班号
+		String coursecode = pageData.get("kc_id").toString().split("\\-")[0].trim();
+		String classCode = pageData.get("kc_id").toString().split("\\-")[1].trim();
+		if (pageData.get("xq").equals("0")) {
+			pageData.put("xq", "一");
+		}
+		if (pageData.get("xq").equals("1")) {
+			pageData.put("xq", "二");
+		}
+		pageData.put("classCode",classCode);//班号
+		pageData.put("kcid", coursecode);//课程代码
+		SetXnUtil.setXn(pageData);
+		//定义获取教学班id
+		PageData pd = studentSelectResultService.getTeachClassId(pageData);
+		if (null!=pd) {
+			long teachClassId = Long.parseLong(pd.get("MAINID").toString());
+			pageData.put("teachClassId", teachClassId);
+		}
+		PageData pData = studentSelectResultService.getMainId(pageData); 
+		if(pData!=null){
+			pageData.put("mainId", Integer.parseInt(pData.get("MAINID").toString()));
+		}
+		return pageData;
+	}
+
+
 	/** 
 	* @Title: update 
 	* @Description: 获取更新数据
@@ -219,7 +267,7 @@ public class StudentSelectResultTask {
 			try {
 				pData.clear();
 				pData = studentSelectResultService.getMainId(beforePd);
-				if(pData!=null){//更新或者删除
+				if(pData!=null){//更新
 					pageData.put("mainId", Integer.parseInt(pData.get("MAINID").toString()));
 				}else{//新增
 					PageData pdData = studentSelectResultService.getMaxId();
@@ -238,7 +286,6 @@ public class StudentSelectResultTask {
 			}
 			
 		}
-		
 		return pageData;
 		
 	}

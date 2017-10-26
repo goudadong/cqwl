@@ -64,26 +64,31 @@ public class TeachTaskTask {
 	 */
 	private void SyncData(List<PageData> list) throws Exception {
 		for (PageData pageData : list) {
+			int result =0 ;
 			try {
 				logger.info(pageData.toString());
-				pageData.put("opState", 1);
 				switch (pageData.getString("opType")) {
 				case "update":
-					saveData(pageData, 1);// 保存数据，1表示更新
-					hwadee_OpTableService.hwadee_OpTable_update(pageData);
+					result = saveData(pageData, 1);// 保存数据，1表示更新
 					break;
 				case "delete":
-					saveData(pageData, 2);// 保存数据，2表示删除
-					hwadee_OpTableService.hwadee_OpTable_update(pageData);
+					result = saveData(pageData, 2);// 保存数据，2表示删除
 					break;
 				case "insert":
-					saveData(pageData, 3);// 保存数据，3表示插入
-					hwadee_OpTableService.hwadee_OpTable_update(pageData);
+					result = saveData(pageData, 3);// 保存数据，3表示插入
 					break;
 				default:
 					break;
 				}
-
+				if(result==0){
+					logger.error("同步出现异常,执行没有成功！");
+					pageData.put("opState", -1);
+					hwadee_OpTableService.hwadee_OpTable_update(pageData);
+				}if(result==1){
+					pageData.put("opState", 1);
+					hwadee_OpTableService.hwadee_OpTable_update(pageData);
+				}
+				
 			} catch (Exception e) {
 				logger.error("同步出现异常" + e.getMessage());
 				pageData.put("opState", -1);
@@ -93,52 +98,80 @@ public class TeachTaskTask {
 	}
 
 	/**
+	 * @return 
 	 * @Title: saveData @Description: 保存数据 @param pData @param flag
 	 * 1：更新，2：删除，3：新增 @throws Exception 参数说明 @return void 返回类型 @throws
 	 */
-	private void saveData(PageData pData, int flag) throws Exception {
-		String[] tableMainId = pData.getString("tableMainId").split("\\|");// tableMainId=XH:2004|XQ_ID:0|KCDM:171019
-																			// |T_SKBJ:171019-005
-																			// |BJDM:2001050303
-		if (tableMainId.length > 1) {
-			PageData pd = new PageData();
-			String tempXn = tableMainId[0].split(":")[1].trim();
-			String tempXq = tableMainId[1].split(":")[1].trim();
-			String xh = tableMainId[2].split(":")[1].trim();
-
-			pd.put("xn", tempXn);
-			pd.put("xq", tempXq);
-			pd.put("xh", xh);
-
-			pd = hwadee_OpTableService.findByColums_task(pd);
-			logger.info("------------>获取到了数据" + pd);
-			// 切换数据库
+	private int saveData(PageData pData, int flag) throws Exception {
+		
+		int result = 0;
+		try {
+			String []tableMainId = pData.getString("tableMainId").split("\\|");//修改之后的数据
+			String []tableMainIdNew = {};
+			if(pData.containsKey("tableMainIdNew")){
+				tableMainIdNew= pData.getString("tableMainIdNew").split("\\|");//修改之前的数据
+			}
+			//变之后的数据
+			PageData pd =new PageData();
+			PageData findPd = null;																// |T_SKBJ:171019-005
+			if (tableMainId.length > 1) {
+				String tempXn = tableMainId[0].split(":")[1].trim();
+				String tempXq = tableMainId[1].split(":")[1].trim();
+				String xh = tableMainId[2].split(":")[1].trim();
+				String skbj = tableMainId[3].split(":")[1].trim();
+				
+				pd.put("xn", tempXn);
+				pd.put("xq", tempXq);
+				pd.put("xh", xh);
+				pd.put("skbj", skbj);
+	
+				findPd = hwadee_OpTableService.findByColums_task(pd);
+			}
+			//变之前的数据
+			PageData beforePd = new PageData();
+			if (tableMainIdNew.length > 1) {
+				String tempXn = tableMainIdNew[0].split(":")[1].trim();
+				String tempXq = tableMainIdNew[1].split(":")[1].trim();
+				String xh = tableMainIdNew[2].split(":")[1].trim();
+				String skbj = tableMainIdNew[3].split(":")[1].trim();
+				
+				beforePd.put("xn", tempXn);
+				beforePd.put("xq", tempXq);
+				beforePd.put("xh", xh);
+				beforePd.put("skbj", skbj);
+			}
+			
+			logger.info("------------>获取到了数据"+findPd);
+			//切换数据库
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
 			logger.info("----------->开始处理数据！");
-			try {
-				detalData(pd, flag);
-				// 切换数据库
-				DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
-			} catch (Exception e) {
-				// 切换数据库
-				DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
-				logger.error("同步出现异常" + e.getMessage());
-				pData.put("opState", -1);
-				hwadee_OpTableService.hwadee_OpTable_update(pData);
+			if(findPd!=null&&flag!=2){
+				result = detalData(findPd,beforePd,flag);
+			}else if(flag==2){
+				result = detalData(pd,beforePd,flag);
+			}else{
+				logger.info("在更新或者新增时没有查到源数据，请排查！");
 			}
-			logger.info("----------->处理数据结束！");
-
+			// 切换数据库
+			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		logger.info("----------->处理数据结束！");
+		return result;
 	}
 
 	/**
+	 * @param beforePd 
+	 * @return 
 	 * @throws Exception @throws Exception @Title: detalData @Description:
 	 * 处理数据 @param pd @param flag 1：更新，2：删除，3：新增 @return void 返回类型 @throws
 	 */
-	private void detalData(PageData data,int flag) throws Exception {
+	private int detalData(PageData data,PageData beforePd, int flag) throws Exception {
+		int result = 0;
 		PageData pageData = new PageData();
 		if (flag==1) {
-			pageData =  getOracleData(data);
+			pageData =  getOracleData(data,beforePd);
 			logger.info("开始处理数据:"+pageData.toString());
 			// 切换数据库
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
@@ -147,56 +180,97 @@ public class TeachTaskTask {
 			List<PageData>  bjdms =  teacherClassService.getBjdm(pageData);
 			// 切换数据库
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
-			for (PageData bjdm : bjdms) { 
-				int teachClassId = Integer.parseInt(pageData.get("mainId").toString());
-				pageData.put("teachClassId", teachClassId);
-				pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
-				teacherClassService.natureClass_update(pageData);
+			if (pageData.containsKey("mainId")) {
+				for (PageData bjdm : bjdms) { 
+					int teachClassId = Integer.parseInt(pageData.get("mainId").toString());
+					pageData.put("teachClassId", teachClassId);
+					pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
+					result = teacherClassService.natureClass_update(pageData);
+				}
+				result = teacherClassService.teacherClass_update(pageData);
+				result = scheduleMethod_update(pageData);
+			}else{
+				logger.error("没有查到对应的教学班！");
+				result = 0;
 			}
-			teacherClassService.teacherClass_update(pageData);
-			scheduleMethod_update(pageData);
 		}
 		if (flag==2) {
-			pageData =  getOracleData(data);
-			teacherClassService.natureClass_delete(pageData);
-			teacherClassService.teacherClass_delete(pageData);
-			scheduleMethod_delete(pageData);
+			pageData =  getDelOracleData(data);
+			result = teacherClassService.natureClass_delete(pageData);
+			result = teacherClassService.teacherClass_delete(pageData);
+			result = scheduleMethod_delete(pageData);
 		}
 		if (flag==3) {
-			pageData = getOracleData(data);
+			pageData = getOracleData(data,beforePd);
 			// 切换数据库
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 			pageData.put("xn_", pageData.getString("xn").split("\\-")[0]);
 			List<PageData>  bjdms =  teacherClassService.getBjdm(pageData);
 			// 切换数据库
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
-			for (PageData bjdm : bjdms) { 
-				int teachClassId = Integer.parseInt(pageData.get("mainId").toString());
-				PageData pdData = teacherClassService.getNatureMaxId();
-				int maxid = 0 ;
-				if(pdData != null){
-					Object object = pdData.get("MAX_ID");
-					maxid = Integer.parseInt(object.toString());
+			if(pageData.containsKey("mainId")){
+				for (PageData bjdm : bjdms) { 
+					int teachClassId = Integer.parseInt(pageData.get("mainId").toString());
+					PageData pdData = teacherClassService.getNatureMaxId();
+					int maxid = 0 ;
+					if(pdData != null){
+						Object object = pdData.get("MAX_ID");
+						maxid = Integer.parseInt(object.toString());
+					}
+					maxid++;
+					pageData.put("naMainid", maxid);
+					pageData.put("teachClassId", teachClassId);
+					pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
+					result = teacherClassService.insertTeachNature(pageData);
 				}
-				maxid++;
-				pageData.put("naMainid", maxid);
-				pageData.put("teachClassId", teachClassId);
-				pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
-				teacherClassService.insertTeachNature(pageData);
+				result = teacherClassService.teacherClass_insert(pageData);
+				//插入理论学时排课方式，实践排课不插入
+				result =  scheduleMethod_insert(pageData);
+			}else{
+				logger.error("没有查到对应的教学班！");
+				result = 0;
 			}
 			
-			teacherClassService.teacherClass_insert(pageData);
-			//插入理论学时排课方式，实践排课不插入
-			scheduleMethod_insert(pageData);
 			
 		}
+		return result;
 	}
 
 	/**
+	 * 删除原有数据
+	 * @param pageData
+	 * @return
+	 * @throws Exception
+	 */
+	private PageData getDelOracleData(PageData pageData) throws Exception {
+		//学期
+		if (pageData.get("xq").equals("0")) {
+			pageData.put("semester", "一");
+		}
+		if (pageData.get("xq").equals("1")) {
+			pageData.put("semester", "二");
+		}
+		//学年
+		SetXnUtil.setXn(pageData);
+		//课程代码
+		pageData.put("KCDM", pageData.get("skbj").toString().split("\\-")[0]);
+		// 截取班号：如013120-002 ，截取002
+		String classCode = pageData.get("skbj").toString().split("\\-")[1]
+				.trim();
+		pageData.put("classCode", classCode);
+		pageData = teacherClassService.getMainId(pageData);
+		if(pageData!=null){//删除
+			pageData.put("mainId", Integer.parseInt(pageData.get("MAINID").toString()));
+		}
+		return pageData;
+	}
+
+	/**
+	 * @param beforePd 
 	 * @Title: update @Description: 获取更新数据 @param pageData @return @throws
 	 * Exception 参数说明 @return PageData 返回类型 @throws
 	 */
-	private PageData getOracleData(PageData pageData) throws Exception {
+	private PageData getOracleData(PageData pageData, PageData beforePd) throws Exception {
 
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
 		String courseCode = pageData.getString("KCDM").trim();
@@ -286,10 +360,12 @@ public class TeachTaskTask {
 		SetXnUtil.setXn(pageData);
 		try {
 			PageData pData = new PageData();
-			pData = teacherClassService.getMainId(pageData);
-			if (pData != null) {// 更新或者删除
-				pageData.put("mainId", Integer.parseInt(pData.get("MAINID").toString()));
-			} else {// 新增
+			if(!beforePd.isEmpty()){
+				pData = getDelOracleData(beforePd);
+				if (pData != null) {// 更新
+					pageData.put("mainId", Integer.parseInt(pData.get("mainId").toString()));
+				}
+			}else {// 新增
 				PageData pdData = teacherClassService.getMaxId();
 				int maxid = 0;
 				if (pdData != null) {
@@ -312,12 +388,13 @@ public class TeachTaskTask {
 	/**
 	 * 删除排课方式
 	 * @param pageData
+	 * @return 
 	 * @throws Exception
 	 */
-	private void scheduleMethod_delete(PageData pageData) throws Exception {
+	private int scheduleMethod_delete(PageData pageData) throws Exception {
 		PageData scheduleMethodData = new PageData();
 		scheduleMethodData.put("teacherClassId", pageData.get("mainId"));
-		scheduleMethodService.scheduleMethod_delete(scheduleMethodData);
+		return scheduleMethodService.scheduleMethod_delete(scheduleMethodData);
 		
 	}
 	
@@ -326,7 +403,7 @@ public class TeachTaskTask {
 	 * @param pageData
 	 * @throws Exception 
 	 */
-	private void scheduleMethod_update(PageData pageData) throws Exception {
+	private int scheduleMethod_update(PageData pageData) throws Exception {
 		PageData scheduleMethodData = new PageData();
 		scheduleMethodData.put("teacherClassId", pageData.get("mainId"));
 		scheduleMethodData.put("startWeek", pageData.get("KSZ"));
@@ -334,15 +411,16 @@ public class TeachTaskTask {
 		scheduleMethodData.put("capacity", pageData.get("stuNum"));
 		scheduleMethodData.put("dataRights", pageData.get("manageWeekHours")); ////排课系统周学时--暂时存此字段
 		
-		scheduleMethodService.scheduleMethod_update(scheduleMethodData);
+		return scheduleMethodService.scheduleMethod_update(scheduleMethodData);
 	}
 
 	/**插入数据到排课方式表
 	 * 
 	 * @param classData
+	 * @return 
 	 * @throws Exception 
 	 */
-	public void scheduleMethod_insert(PageData classData) throws Exception {
+	public int scheduleMethod_insert(PageData classData) throws Exception {
 		PageData scheduleMethodData = new PageData();
 		
 		PageData object  = scheduleMethodService.getMaxId();
@@ -364,7 +442,7 @@ public class TeachTaskTask {
 		scheduleMethodData.put("dataRights", classData.get("manageWeekHours")); ////排课系统周学时--暂时存此字段
 		
 		
-		scheduleMethodService.scheduleMethod_insert(scheduleMethodData);
+		return scheduleMethodService.scheduleMethod_insert(scheduleMethodData);
 	}
 	
 

@@ -56,26 +56,24 @@ public class OpenCourseScheduleService {
 		return (PageData) dao.findForObject("OpenCourseScheduleMapper.getDepartmentOrgId", majorOrgId);
 	}
 	
-	public void openCourseSchedule_insert(PageData pd) throws Exception{
-		dao.save("OpenCourseScheduleMapper.openCourseSchedule_insert", pd);
+	public int openCourseSchedule_insert(PageData pd) throws Exception{
+		return (int) dao.save("OpenCourseScheduleMapper.openCourseSchedule_insert", pd);
 	}
 	/**
+	 * @throws Exception 
+	 * @return 
 	 * @throws Exception  
 	* @Title: openCourseSchedule_update 
-	* @Description: TODO(这里用一句话描述这个方法的作用) 
 	* @param pd  参数说明 
 	* @return void    返回类型 
 	* @throws 
 	*/
-	public void openCourseSchedule_update(PageData pd) {
-		try {
-			dao.update("OpenCourseScheduleMapper.openCourseSchedule_update", pd);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public int openCourseSchedule_update(PageData pd) throws Exception {
+	   return(int) dao.update("OpenCourseScheduleMapper.openCourseSchedule_update", pd);
 		
 	}
 	/**
+	 * @return 
 	 * @throws Exception  
 	* @Title: openCourseSchedule_delete 
 	* @Description:  
@@ -83,8 +81,8 @@ public class OpenCourseScheduleService {
 	* @return void    返回类型 
 	* @throws 
 	*/
-	public void openCourseSchedule_delete(PageData pd) throws Exception {
-		dao.delete("OpenCourseScheduleMapper.openCourseSchedule_delete", pd);
+	public int openCourseSchedule_delete(PageData pd) throws Exception {
+		return (int) dao.delete("OpenCourseScheduleMapper.openCourseSchedule_delete", pd);
 		
 	}
 	

@@ -9,13 +9,13 @@
 
 	<task:scheduled-tasks scheduler="taskScheduler">
 		<!-- 每5秒中触发任务 -->
-		<task:scheduled ref="OpenCourseScheduleTask" method="job" cron="5 * *  * * ?" />
+		<task:scheduled ref="OpenCourseScheduleTask" method="job" cron="5 * *  * * ?" /> 
 		<!-- 每5秒中触发任务 -->
 		<task:scheduled ref="TeacherClassTask" method="job" cron="5 * *  * * ?" />
 		<!-- 每5秒钟触发任务 -->
 		<task:scheduled ref="StudentSelectResultTask" method="job" cron="5 * * * * ?" />
 		<!-- 每5秒钟触发任务 -->
-		<task:scheduled ref="ScheduResultTask" method="job" cron="5 * * * * ?" />
+		<task:scheduled ref="ScheduResultTask" method="job" cron="5 * * * * ?" /> 
 		<!-- 每5秒钟触发任务 -->
 		<task:scheduled ref="TeachTaskTask" method="job" cron="5 * * * * ?" />
 	</task:scheduled-tasks>

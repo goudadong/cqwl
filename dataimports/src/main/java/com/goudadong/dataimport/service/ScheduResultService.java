@@ -46,8 +46,8 @@ public class ScheduResultService {
 		return (PageData) dao.findForObject("ScheduResultMapper.getMaxId", null);
 	}
 	
-	public void scheduResult_insert(PageData pd) throws Exception{
-		dao.save("ScheduResultMapper.scheduResult_insert", pd);
+	public int scheduResult_insert(PageData pd) throws Exception{
+		return (int) dao.save("ScheduResultMapper.scheduResult_insert", pd);
 	}
 	
 	//获取教师编号
@@ -94,10 +94,11 @@ public class ScheduResultService {
 	/**
 	 * 删除
 	 * @param pageData
+	 * @return 
 	 * @throws Exception
 	 */
-	public void scheduResult_delete(PageData pageData) throws Exception {
-		dao.delete("ScheduResultMapper.scheduResult_delete", pageData);
+	public int scheduResult_delete(PageData pageData) throws Exception {
+		return (int) dao.delete("ScheduResultMapper.scheduResult_delete", pageData);
 		
 	}
 }

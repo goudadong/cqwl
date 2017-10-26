@@ -43,13 +43,14 @@
 	<select id="findByColums_stuselect" parameterType="pd" resultType="pd">
 		select [xn],[xq_id],b.user_xh XS_ID,KC_ID,[kcid] from T_KB_SelKC a 
 		INNER JOIN T_XJ_StudBaseInfo  b ON a.xs_id = b.XH 
-		where a.xn = #{xn} and a.xq_id = #{xq} and a.XS_ID=#{xh} and a.kc_id = #{kcid}
+		where a.xn = #{xn} and a.xq_id = #{xq} and a.XS_ID=#{xh} and a.kc_id = #{kc_id}
 	</select>
 	<!-- 查询青果选课结果表 -->
 	<select id="findByColums_beforeStuSelect" parameterType="pd" resultType="String">
-		select b.user_xh xh from T_KB_SelKC a 
-		INNER JOIN T_XJ_StudBaseInfo  b ON a.xs_id = b.XH 
-		where a.xn = #{xn} and a.xq_id = #{xq} and a.XS_ID=#{xh} and a.kc_id = #{kcid}
+		SELECT
+			b.user_xh 
+		FROM
+			 T_XJ_StudBaseInfo b where b.XH = #{xh}
 	</select>
 	
 	<!-- 查询青果排课结果表 -->

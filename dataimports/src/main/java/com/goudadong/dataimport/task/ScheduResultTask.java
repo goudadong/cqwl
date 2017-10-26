@@ -72,26 +72,30 @@ public class ScheduResultTask {
 		*/
 		private void SyncData(List<PageData> list) throws Exception{
 			for (PageData pageData : list) {
+				int result =0 ;
 				try {
 					logger.info(pageData.toString());
-					pageData.put("opState", 1);
 					switch (pageData.getString("opType")) {
 					case "update":
-						saveData(pageData,1);//保存数据，1表示更新
-						hwadee_OpTableService.hwadee_OpTable_update(pageData);
+						result =saveData(pageData,1);//保存数据，1表示更新
 						break;
 					case "delete":
-						saveData(pageData,2);//保存数据，2表示删除	
-						hwadee_OpTableService.hwadee_OpTable_update(pageData);
+						result =saveData(pageData,2);//保存数据，2表示删除	
 						break;
 					case "insert":
-						saveData(pageData,3);//保存数据，3表示插入
-						hwadee_OpTableService.hwadee_OpTable_update(pageData);
+						result =saveData(pageData,3);//保存数据，3表示插入
 						break;
 					default:
 						break;
 					}
-					
+					if(result==0){
+						logger.error("同步出现异常,执行没有成功！");
+						pageData.put("opState", -1);
+						hwadee_OpTableService.hwadee_OpTable_update(pageData);
+					}if(result==1){
+						pageData.put("opState", 1);
+						hwadee_OpTableService.hwadee_OpTable_update(pageData);
+					}
 				} catch (Exception e) {
 					logger.error("同步出现异常"+e.getMessage());
 					pageData.put("opState", -1);
@@ -100,7 +104,8 @@ public class ScheduResultTask {
 			}
 		}
 		
-		/** 
+		/**
+		 * @return  
 		* @Title: saveData 
 		* @Description: 保存数据
 		* @param pData
@@ -109,52 +114,86 @@ public class ScheduResultTask {
 		* @return void    返回类型 
 		* @throws 
 		*/
-		private void saveData(PageData pData,int flag) throws Exception{
-			String []tableMainId = pData.getString("tableMainId").split("\\|");//tableMainId=XN:2001|XQ_ID:0|KCID:000005|xh:374833
-			if (tableMainId.length>1) {
+		private int saveData(PageData pData,int flag) throws Exception{
+			int result = 0;
+			try {
+				String []tableMainId = pData.getString("tableMainId").split("\\|");//修改之后的数据
+				String []tableMainIdNew = {};
+				if(pData.containsKey("tableMainIdNew")){
+					tableMainIdNew= pData.getString("tableMainIdNew").split("\\|");//修改之前的数据
+				}
+				//变之后的数据
 				PageData pd =new PageData();
-				String tempXn = tableMainId[0].split(":")[1].trim();
-				String tempXq = tableMainId[1].split(":")[1].trim();
-				String skbj = tableMainId[2].split(":")[1].trim();
-				String bjdm = tableMainId[3].split(":")[1].trim();
-				String jcz = tableMainId[4].split(":")[1].trim();
-				String dsz = tableMainId[5].split(":")[1].trim();
-				String jsm = tableMainId[6].split(":")[1].trim();
-				String stimezc = tableMainId[7].split(":")[1].trim();
-				
-				pd.put("xn", tempXn);
-				pd.put("xq", tempXq);
-				pd.put("skbj", skbj);
-				pd.put("bjdm", bjdm);
-				pd.put("jcz", jcz);
-				pd.put("dsz", dsz);
-				pd.put("jsm", jsm);
-				pd.put("stimezc", stimezc);
-				
-				pd = hwadee_OpTableService.findByColums_schedul(pd);
-				logger.info("------------>获取到了数据"+pd);
+				PageData findPd = null;
+				if (tableMainId.length>1) {
+					String tempXn = tableMainId[0].split(":")[1].trim();
+					String tempXq = tableMainId[1].split(":")[1].trim();
+					String skbj = tableMainId[2].split(":")[1].trim();
+					String bjdm = tableMainId[3].split(":")[1].trim();
+					String jcz = tableMainId[4].split(":")[1].trim();
+					String dsz = tableMainId[5].split(":")[1].trim();
+					String jsm = tableMainId[6].split(":")[1].trim();
+					String stimezc = tableMainId[7].split(":")[1].trim();
+					String jcinfo = tableMainId[8].split(":")[1].trim();
+					
+					pd.put("xn", tempXn);
+					pd.put("xq", tempXq);
+					pd.put("skbj", skbj);
+					pd.put("bjdm", bjdm);
+					pd.put("jcz", jcz);
+					pd.put("dsz", dsz);
+					pd.put("jsm", jsm);
+					pd.put("stimezc", stimezc);
+					pd.put("jcinfo", jcinfo);
+					findPd = hwadee_OpTableService.findByColums_schedul(pd);
+				}
+				//变之前的数据
+				PageData beforePd = new PageData();
+				if (tableMainIdNew.length>1) {
+					String tempXn = tableMainIdNew[0].split(":")[1].trim();
+					String tempXq = tableMainIdNew[1].split(":")[1].trim();
+					String skbj = tableMainIdNew[2].split(":")[1].trim();
+					String bjdm = tableMainIdNew[3].split(":")[1].trim();
+					String jcz = tableMainIdNew[4].split(":")[1].trim();
+					String dsz = tableMainIdNew[5].split(":")[1].trim();
+					String jsm = tableMainIdNew[6].split(":")[1].trim();
+					String stimezc = tableMainIdNew[7].split(":")[1].trim();
+					String jcinfo = tableMainIdNew[8].split(":")[1].trim();
+					
+					beforePd.put("xn", tempXn);
+					beforePd.put("xq", tempXq);
+					beforePd.put("skbj", skbj);
+					beforePd.put("bjdm", bjdm);
+					beforePd.put("jcz", jcz);
+					beforePd.put("dsz", dsz);
+					beforePd.put("jsm", jsm);
+					beforePd.put("stimezc", stimezc);
+					beforePd.put("jcinfo", jcinfo);
+				}
+				logger.info("------------>获取到了数据"+findPd);
 				//切换数据库
 				DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
 				logger.info("----------->开始处理数据！");
-				try {
-					detalData(pd,flag);
-				} catch (Exception e) {
-					//切换数据库
-					DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
-					logger.error("同步出现异常"+e.getMessage());
-					pData.put("opState", -1);
-					hwadee_OpTableService.hwadee_OpTable_update(pData);
+				if(findPd!=null && flag!=2){
+					result = detalData(findPd,beforePd,flag);
+				}else if(flag==2){
+					result =  detalData(pd,beforePd,flag);
+				}else{
+					logger.info("在更新或者新增时没有查到源数据，请排查！");
 				}
-				//切换数据库
-				DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
-
-				logger.info("----------->处理数据结束！");
-				
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+			//切换数据库
+			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+			logger.info("----------->处理数据结束！");
+			return result;	
 		}
 
 
 		/**
+		 * @return 
+		 * @param beforePd 
 		 * @throws Exception 
 		 * @throws Exception  
 		* @Title: detalData 
@@ -164,19 +203,73 @@ public class ScheduResultTask {
 		* @return void    返回类型 
 		* @throws 
 		*/
-		private void detalData(PageData data,int flag) throws Exception {
+		private int detalData(PageData data,PageData beforePd, int flag) throws Exception {
+			int restult = 0;
 			if (flag==1) {
-				getOracleData(data);
+				restult = getOracleData(data,beforePd);
 			}
 			if (flag==2) {
-				getOracleData(data);
+				restult = deleteOracle(data);
 			}
 			if (flag==3) {
-				getOracleData(data);
+				restult = getOracleData(data,beforePd);
 			}
+			return restult;
 		}
 		
-		/** 
+		/**
+		 * 删除原有数据
+		 * @param pageData
+		 * @throws Exception 
+		 */
+		private int  deleteOracle(PageData pageData) throws Exception {
+			
+			int result =0;
+			
+			// 转换学期
+			if (pageData.get("xq").equals("0")) {
+				pageData.put("semester", "一");
+			}
+			if (pageData.get("xq").equals("1")) {
+				pageData.put("semester", "二");
+			}
+			// 设置学年
+			SetXnUtil.setXn(pageData);
+			// 截取班号：如013120-002 ，截取002
+			String classCode = pageData.get("skbj").toString().split("\\-")[1].trim();
+			String courseCode = pageData.get("skbj").toString().split("\\-")[0].trim();
+			pageData.put("teachPlaceCode", pageData.getString("jsm"));
+			pageData.put("classCode", classCode);
+			pageData.put("courseCode", courseCode);
+			//节次： 3-4
+			String []tempjcs = pageData.getString("jcinfo").split("\\-");
+			
+			/**节次和星期**/
+			if (tempjcs.length>1) {//如果存在单节n的格式情况设置为1-n节
+				pageData.put("BEGINSECTION", tempjcs[0]);// 开始节次
+				pageData.put("ENDSECTION", tempjcs[1]);// 结束节次
+			}else{
+				pageData.put("BEGINSECTION", tempjcs[0]);// 开始节次
+				pageData.put("ENDSECTION", tempjcs[0]);// 结束节次
+			}
+			DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
+			List<PageData>	mainids = scheduResultService.getMainId(pageData);
+			if(mainids.size()>0){//更新或者删除
+				for (PageData mainid : mainids) {
+					try {
+						result = scheduResultService.scheduResult_delete(mainid);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			return result;
+		}
+
+
+		/**
+		 * @param beforePd  
 		* @Title: update 
 		* @Description: 获取更新数据
 		* @param pageData
@@ -185,7 +278,7 @@ public class ScheduResultTask {
 		* @return PageData    返回类型 
 		* @throws 
 		*/
-		private PageData getOracleData(PageData pageData) throws Exception{
+		private int getOracleData(PageData pageData, PageData beforePd) throws Exception{
 			
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
 			// 转换学期
@@ -221,14 +314,15 @@ public class ScheduResultTask {
 			// 获取教学班id
 			PageData teaClassId = new PageData();
 			teaClassId = scheduResultService.getTeachClassId(pData);
+			int result = 0;
 			if (null != teaClassId) {
 				pageData.put("TEACHCLASSID", Integer.parseInt(teaClassId.get("MAINID").toString()));
 				pageData.put("classCode", classCode);
 				// 解析周次，节次，上课时间
-				Analyse(pageData);
+				result  = Analyse(pageData,beforePd);
 			}
 			
-			return pageData;
+			return result;
 			
 		}
 		
@@ -236,51 +330,54 @@ public class ScheduResultTask {
 		/**
 		 * @param pageData
 		 * @param zc :周次
+		 * @return 
 		 * @throws Exception
 		 */
-		private void savesData(PageData pageData, int zc ) throws Exception{
+		private int savesData(PageData pageData, int zc ) throws Exception{
 			// 切换数据库
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
 			pageData.put("WEEKORDER", zc);// 周次
 			// 解析并设置上课时间
-			setJcTime(pageData);
+			return setJcTime(pageData);
 		}
 		
 		/**
 		 * 设置周次节次
 		 * @param pageData
+		 * @return 
 		 * @throws Exception 
 		 */
-		private void setZcJc(PageData pageData) throws Exception{
+		private int setZcJc(PageData pageData) throws Exception{
+			int result =0;
 			String []zcs = pageData.getString("tempzc").split("\\-"); //解析4-10
 				if (zcs.length>1) {//表示为4-10这种情况的周次
 					for(int i = Integer.parseInt(zcs[0]);i<=Integer.parseInt(zcs[1]);i++){
 						if (pageData.getString("dsz").equals("0")) {//不分单双周
-							savesData(pageData,i);
+							result = savesData(pageData,i);
 						}
 						if (i%2!=0 && pageData.getString("dsz").equals("1")) {//单周
-							savesData(pageData,i);
+							result = savesData(pageData,i);
 						}
 						if (i%2==0  && pageData.getString("dsz").equals("2")) {//双周
-							savesData(pageData,i);
+							result = savesData(pageData,i);
 						}
 					}
 				}else{//表示只有一周的情况如18周
-					savesData(pageData,Integer.parseInt(zcs[0]));
+					result = savesData(pageData,Integer.parseInt(zcs[0]));
 				}
+			return result ;
 		}
 
 		/**
 		 * 设置周次，节次，上课时间
 		 * 
 		 * @param pageData
+		 * @param beforePd 
 		 * @throws Exception
 		 */
-		private void Analyse(PageData pageData) throws Exception {
+		private int  Analyse(PageData pageData, PageData beforePd) throws Exception {
 			
-			
-			
-			
+			int result =0;
 			//周次： 01,4-10,12-18 或者12-18 或者 18
 			String []tempzcs = pageData.getString("stimezc").split(",");
 			//节次： 3-4
@@ -300,41 +397,37 @@ public class ScheduResultTask {
 			pageData.put("DAYORDER", pageData.getString("JCz").substring(1, 2));// 星期几
 			/**节次和星期**/
 			//删除原有的数据
-			List<PageData>	mainids = scheduResultService.getMainId(pageData);
-			if(mainids.size()>0){//更新或者删除
-				for (PageData mainid : mainids) {
-					try {
-						scheduResultService.scheduResult_delete(mainid);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
+			if(!beforePd.isEmpty()){
+				deleteOracle(beforePd);
 				/**周次**/
 				if (tempzcs.length>1) {//存在多个周次的情况如：01,4-10,12-18
 					//循环周次
 					for (String zc : tempzcs) {
 						pageData.put("tempzc", zc);
-						setZcJc(pageData);
+						result = setZcJc(pageData);
 					}
 					
 				}else{//数据是18或者2-16的时候zcs只有一个
 					pageData.put("tempzc", tempzcs[0]);
-					setZcJc(pageData);
+					result = setZcJc(pageData);
 				}
-			}else{//新增
+				
+			}
+			else{//新增
 				/**周次**/
 				if (tempzcs.length>1) {//存在多个周次的情况如：01,4-10,12-18
 					//循环周次
 					for (String zc : tempzcs) {
 						pageData.put("tempzc", zc);
-						setZcJc(pageData);
+						result = setZcJc(pageData);
 					}
 					
 				}else{//数据是18或者2-16的时候zcs只有一个
 					pageData.put("tempzc", tempzcs[0]);
-					setZcJc(pageData);
+					result = setZcJc(pageData);
 				}
 			}
+			return result;
 			
 		}
 
@@ -343,7 +436,8 @@ public class ScheduResultTask {
 		 * @param tempjc
 		 * @throws Exception
 		 */
-		private void setJcTime(PageData pageData) throws Exception {
+		private int setJcTime(PageData pageData) throws Exception {
+			int result = 0;
 			// 切换数据库
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 			List<PageData> xlList = scheduResultService.findSchoolCalendar(null);
@@ -378,9 +472,10 @@ public class ScheduResultTask {
 					pageData.put("mainId", maxid);
 					pageData.put("ISVALID", 1);
 					pageData.put("ISDELETED", 0);
-					scheduResultService.scheduResult_insert(pageData);
+					result = scheduResultService.scheduResult_insert(pageData);
 				}
 			}
+			return result ;
 		}
 		
 		/**

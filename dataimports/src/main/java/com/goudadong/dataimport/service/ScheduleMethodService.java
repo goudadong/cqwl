@@ -21,17 +21,17 @@ public class ScheduleMethodService {
 		return (PageData)dao.findForObject("ScheduleMethodMapper.getMaxId", null);
 	}
 	
-	public void scheduleMethod_insert(PageData pd) throws Exception{
-		dao.save("ScheduleMethodMapper.scheduleMethod_insert", pd);
+	public int scheduleMethod_insert(PageData pd) throws Exception{
+		return (int)dao.save("ScheduleMethodMapper.scheduleMethod_insert", pd);
 	}
 
-	public void scheduleMethod_update(PageData pd) throws Exception {
-		dao.save("ScheduleMethodMapper.scheduleMethod_update", pd);
+	public int scheduleMethod_update(PageData pd) throws Exception {
+		return (int)dao.save("ScheduleMethodMapper.scheduleMethod_update", pd);
 		
 	}
 
-	public void scheduleMethod_delete(PageData pd) throws Exception {
-		dao.delete("ScheduleMethodMapper.scheduleMethod_delete", pd);
+	public int scheduleMethod_delete(PageData pd) throws Exception {
+		return (int) dao.delete("ScheduleMethodMapper.scheduleMethod_delete", pd);
 	}
 	
 
