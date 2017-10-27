@@ -81,12 +81,13 @@ public class TeachTaskTask {
 					break;
 				}
 				if(result==0){
-					logger.error("同步出现异常,执行没有成功！");
+					logger.error("受影响行数为0,同步失败！");
 					pageData.put("opState", -1);
 					hwadee_OpTableService.hwadee_OpTable_update(pageData);
-				}if(result==1){
+				}if(result>0){
 					pageData.put("opState", 1);
 					hwadee_OpTableService.hwadee_OpTable_update(pageData);
+					logger.error("受影响行数为"+result+",同步成功！");
 				}
 				
 			} catch (Exception e) {
@@ -187,8 +188,11 @@ public class TeachTaskTask {
 					pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
 					result = teacherClassService.natureClass_update(pageData);
 				}
+				logger.info("受影响行数"+result+",执行方法natureClass_update");
 				result = teacherClassService.teacherClass_update(pageData);
+				logger.info("受影响行数"+result+",执行方法teacherClass_update");
 				result = scheduleMethod_update(pageData);
+				logger.info("受影响行数"+result+",执行方法scheduleMethod_update");
 			}else{
 				logger.error("没有查到对应的教学班！");
 				result = 0;
@@ -197,8 +201,11 @@ public class TeachTaskTask {
 		if (flag==2) {
 			pageData =  getDelOracleData(data);
 			result = teacherClassService.natureClass_delete(pageData);
+			logger.info("受影响行数"+result+",执行方法natureClass_delete");
 			result = teacherClassService.teacherClass_delete(pageData);
+			logger.info("受影响行数"+result+",执行方法teacherClass_delete");
 			result = scheduleMethod_delete(pageData);
+			logger.info("受影响行数"+result+",执行方法scheduleMethod_delete");
 		}
 		if (flag==3) {
 			pageData = getOracleData(data,beforePd);
@@ -223,9 +230,12 @@ public class TeachTaskTask {
 					pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
 					result = teacherClassService.insertTeachNature(pageData);
 				}
+				logger.info("受影响行数"+result+",执行方法insertTeachNature");
 				result = teacherClassService.teacherClass_insert(pageData);
+				logger.info("受影响行数"+result+",执行方法teacherClass_insert");
 				//插入理论学时排课方式，实践排课不插入
 				result =  scheduleMethod_insert(pageData);
+				logger.info("受影响行数"+result+",执行方法scheduleMethod_insert");
 			}else{
 				logger.error("没有查到对应的教学班！");
 				result = 0;
@@ -261,6 +271,8 @@ public class TeachTaskTask {
 		pageData = teacherClassService.getMainId(pageData);
 		if(pageData!=null){//删除
 			pageData.put("mainId", Integer.parseInt(pageData.get("MAINID").toString()));
+		}else{
+			pageData=null;
 		}
 		return pageData;
 	}
@@ -301,20 +313,7 @@ public class TeachTaskTask {
 
 		// 切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
-		// 学生人数
-		int bjrs = 0;
-		String campusCode ="";
-		PageData bjrspd = teacherClassService.getBjrs(pageData);
-		if (bjrspd != null) {
-			bjrs = Integer.parseInt(bjrspd.get("bjrs").toString());
-			if(bjrspd.containsKey("xq")){
-				campusCode = bjrspd.getString("xq");
-			}
-		}
-		pageData.put("stuNum", bjrs);
-		pageData.put("campusCode", campusCode);
 		pageData.put("reasonCode", "0");
-		//// 班级人数
 		int zxs = 0; // 青果总学时
 		int zzxs = 0; // 青果周学时
 		if (pageData.containsKey("ZZXS")) {

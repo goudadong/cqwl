@@ -84,12 +84,13 @@ public class TeacherClassTask {
 						break;
 					}
 					if(result==0){
-						logger.error("同步出现异常,执行没有成功！");
+						logger.error("受影响行数为0,同步失败！");
 						pageData.put("opState", -1);
 						hwadee_OpTableService.hwadee_OpTable_update(pageData);
-					}if(result==1){
+					}if(result>0){
 						pageData.put("opState", 1);
 						hwadee_OpTableService.hwadee_OpTable_update(pageData);
+						logger.error("受影响行数为"+result+",同步成功！");
 					}
 				} catch (Exception e) {
 					logger.error("同步出现异常"+e.getMessage());
@@ -204,6 +205,7 @@ public class TeacherClassTask {
 						pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
 						result = teacherClassService.natureClass_update(pageData);
 					}
+					logger.info("受影响行数"+result+",执行方法natureClass_update");
 				}else{
 					logger.error("没有查到对应的教学班！");
 					result = 0;
@@ -213,6 +215,7 @@ public class TeacherClassTask {
 			if (flag==2) {
 				pageData =  getDelOracleData(data);
 				result = teacherClassService.natureClass_delete(pageData);
+				logger.info("受影响行数"+result+",执行方法natureClass_delete");
 			}
 			if (flag==3) {
 				pageData = getOracleData(data,beforePd);
@@ -238,6 +241,7 @@ public class TeacherClassTask {
 						pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
 						result = teacherClassService.insertTeachNature(pageData);
 					}
+					logger.info("受影响行数"+result+",执行方法insertTeachNature");
 				}else{
 					logger.error("没有查到对应的教学班！");
 					result = 0;
@@ -273,6 +277,8 @@ public class TeacherClassTask {
 			pageData = teacherClassService.getMainId(pageData);
 			if(pageData!=null){//删除
 				pageData.put("mainId", Integer.parseInt(pageData.get("MAINID").toString()));
+			}else{
+				pageData=null;
 			}
 			return pageData;
 		}

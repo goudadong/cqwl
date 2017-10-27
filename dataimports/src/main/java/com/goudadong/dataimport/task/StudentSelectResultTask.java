@@ -80,12 +80,13 @@ public class StudentSelectResultTask {
 					break;
 				}
 				if(result==0){
-					logger.error("同步出现异常,执行没有成功！");
+					logger.error("受影响行数为0,同步失败！");
 					pageData.put("opState", -1);
 					hwadee_OpTableService.hwadee_OpTable_update(pageData);
-				}if(result==1){
+				}if(result>0){
 					pageData.put("opState", 1);
 					hwadee_OpTableService.hwadee_OpTable_update(pageData);
+					logger.error("受影响行数为"+result+",同步成功！");
 				}
 			} catch (Exception e) {
 				logger.error("同步出现异常"+e.getMessage());
@@ -182,14 +183,17 @@ public class StudentSelectResultTask {
 		if (flag==1) {
 			pageData =  getOracleData(data,beforePd);
 			result= studentSelectResultService.studentSelectResult_update(pageData);
+			logger.info("受影响行数"+result+",执行方法studentSelectResult_update");
 		}
 		if (flag==2) {
 			pageData =  getDelOracleData(data);
 			result = studentSelectResultService.studentSelectResult_delete(pageData);
+			logger.info("受影响行数"+result+",执行方法studentSelectResult_delete");
 		}
 		if (flag==3) {
 			pageData =getOracleData(data,beforePd);
 			result= studentSelectResultService.studentSelectResult_insert(pageData);
+			logger.info("受影响行数"+result+",执行方法studentSelectResult_insert");
 		}
 		return result;
 	}
@@ -224,6 +228,8 @@ public class StudentSelectResultTask {
 		PageData pData = studentSelectResultService.getMainId(pageData); 
 		if(pData!=null){
 			pageData.put("mainId", Integer.parseInt(pData.get("MAINID").toString()));
+		}else{
+			pageData=null;
 		}
 		return pageData;
 	}
@@ -266,9 +272,11 @@ public class StudentSelectResultTask {
 			beforePd.put("teachClassId", teachClassId);
 			try {
 				pData.clear();
-				pData = studentSelectResultService.getMainId(beforePd);
-				if(pData!=null){//更新
-					pageData.put("mainId", Integer.parseInt(pData.get("MAINID").toString()));
+				if(!beforePd.isEmpty()){//判断是否为空，为空的情况为新增的情况
+					pData = getDelOracleData(beforePd);
+					if(pData!=null){//更新或者删除
+						pageData.put("mainId", Integer.parseInt(pData.get("mainId").toString()));
+					}
 				}else{//新增
 					PageData pdData = studentSelectResultService.getMaxId();
 					int maxid = 0 ;

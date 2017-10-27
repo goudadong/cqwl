@@ -89,7 +89,9 @@
 			ZZXS,
 			JKKSZ KSZ,
 			JKJSZ JSZ,
-			b.gh
+			b.gh,
+			t_rs stuNum,
+			xq campusCode
 		FROM
 			T_KB_Task a
 		INNER JOIN [T_ZY_TeacherInfo] b ON a.t_ZJJS = b.DM 

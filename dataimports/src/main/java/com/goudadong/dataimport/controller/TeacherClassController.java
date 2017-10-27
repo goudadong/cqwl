@@ -102,18 +102,6 @@ public class TeacherClassController {
 			classData.put("xn_", classData.getString("xn"));
 			List<PageData>  bjdms =  teacherClassService.getBjdm(classData);
 			
-			// 学生人数
-			int bjrs = 0;
-			String campusCode ="";
-			PageData bjrspd = teacherClassService.getBjrs(classData);
-			if (bjrspd != null) {
-				bjrs = Integer.parseInt(bjrspd.get("bjrs").toString());
-				if(bjrspd.containsKey("xq")){
-					campusCode = bjrspd.getString("xq");
-				}
-			}
-			classData.put("stuNum", bjrs);
-			classData.put("campusCode", campusCode);
 			for (PageData bjdm : bjdms) { 
 				// 切换数据库
 				DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);

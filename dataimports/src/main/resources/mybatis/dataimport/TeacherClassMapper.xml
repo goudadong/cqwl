@@ -4,21 +4,22 @@
 <mapper namespace="TeacherClassMapper">
 	
 	<select id="teacherClassList" resultType="pd">
-		SELECT
-			DISTINCT
+		SELECT DISTINCT
 			[xn],
 			[xq_id],
-			[KCDM],
+			kcid KCDM,
 			T_SKBJ,
 			ZXS,
 			ZZXS,
-			KSZ,
-			JSZ,
-			b.gh
+			jkKSZ KSZ,
+			jkJSZ JSZ,
+			b.gh,
+			t_rs stuNum,
+			xq campusCode
 		FROM
-			T_KB_KCFB a
-		INNER JOIN [T_ZY_TeacherInfo] b ON a.ZJJS = b.DM 
-		 ORDER BY xn desc
+			T_KB_TASK a
+		INNER JOIN [T_ZY_TeacherInfo] b ON a.t_ZJJS = b.DM
+			ORDER BY xn desc
 	</select>
 	
 	<!-- 查询校区 -->

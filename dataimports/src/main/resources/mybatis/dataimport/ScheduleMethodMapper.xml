@@ -12,7 +12,7 @@
 			studyTimeType,	
 			startWeek,	
 			endWeek,	
-			assignCode,
+			assign,
 			teachPlaceType,
 			capacity,
 			isValid,

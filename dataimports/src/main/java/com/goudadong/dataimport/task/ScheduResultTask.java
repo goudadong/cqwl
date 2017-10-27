@@ -89,12 +89,13 @@ public class ScheduResultTask {
 						break;
 					}
 					if(result==0){
-						logger.error("同步出现异常,执行没有成功！");
+						logger.error("受影响行数为0,同步失败！");
 						pageData.put("opState", -1);
 						hwadee_OpTableService.hwadee_OpTable_update(pageData);
-					}if(result==1){
+					}if(result>0){
 						pageData.put("opState", 1);
 						hwadee_OpTableService.hwadee_OpTable_update(pageData);
+						logger.error("受影响行数为"+result+",同步成功！");
 					}
 				} catch (Exception e) {
 					logger.error("同步出现异常"+e.getMessage());
@@ -204,17 +205,17 @@ public class ScheduResultTask {
 		* @throws 
 		*/
 		private int detalData(PageData data,PageData beforePd, int flag) throws Exception {
-			int restult = 0;
+			int result = 0;
 			if (flag==1) {
-				restult = getOracleData(data,beforePd);
+				result = getOracleData(data,beforePd);
 			}
 			if (flag==2) {
-				restult = deleteOracle(data);
+				result = deleteOracle(data);
 			}
 			if (flag==3) {
-				restult = getOracleData(data,beforePd);
+				result = getOracleData(data,beforePd);
 			}
-			return restult;
+			return result;
 		}
 		
 		/**
@@ -258,6 +259,7 @@ public class ScheduResultTask {
 				for (PageData mainid : mainids) {
 					try {
 						result = scheduResultService.scheduResult_delete(mainid);
+						logger.info("受影响行数"+result+",执行方法scheduResult_delete");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -473,6 +475,7 @@ public class ScheduResultTask {
 					pageData.put("ISVALID", 1);
 					pageData.put("ISDELETED", 0);
 					result = scheduResultService.scheduResult_insert(pageData);
+					logger.info("受影响行数"+result+",执行方法scheduResult_insert");
 				}
 			}
 			return result ;

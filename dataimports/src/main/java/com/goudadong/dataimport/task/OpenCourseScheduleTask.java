@@ -93,12 +93,13 @@ public class OpenCourseScheduleTask {
 					break;
 				}
 				if(result==0){
-					logger.error("同步出现异常,执行没有成功！");
+					logger.error("受影响行数为0,同步失败！");
 					pageData.put("opState", -1);
 					hwadee_OpTableService.hwadee_OpTable_update(pageData);
-				}if(result==1){
+				}if(result>0){
 					pageData.put("opState", 1);
 					hwadee_OpTableService.hwadee_OpTable_update(pageData);
+					logger.error("受影响行数为"+result+",同步成功！");
 				}
 				
 			} catch (Exception e) {
@@ -202,14 +203,17 @@ public class OpenCourseScheduleTask {
 			if (flag==1) {
 				pageData =  getOracleData(data,beforePd);
 				result = openCourseScheduleService.openCourseSchedule_update(pageData);
+				logger.info("受影响行数"+result+",执行方法openCourseSchedule_update");
 			}
 			if (flag==2) {
 				pageData =  getDelOracleData(data);
 				result = openCourseScheduleService.openCourseSchedule_delete(pageData);
+				logger.info("受影响行数"+result+",执行方法openCourseSchedule_delete");
 			}
 			if (flag==3) {
 				pageData =getOracleData(data,beforePd);
 				result = openCourseScheduleService.openCourseSchedule_insert(pageData);
+				logger.info("受影响行数"+result+",执行方法openCourseSchedule_insert");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -245,6 +249,8 @@ public class OpenCourseScheduleTask {
 		PageData pData = openCourseScheduleService.getMainId(pageData);
 		if(pData!=null){//删除
 			pageData.put("mainId", Integer.parseInt(pData.get("MAINID").toString()));
+		}else{
+			pageData=null;
 		}
 		return pageData;
 	}
