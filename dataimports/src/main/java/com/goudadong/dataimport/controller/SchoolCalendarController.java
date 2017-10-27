@@ -42,8 +42,11 @@ public class SchoolCalendarController {
 		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
 		PageData pdData = schoolCalendarService.getMaxId();
-		Object object = pdData.get("MAX_ID");
-		int maxid = Integer.parseInt(object.toString());
+		int maxid = 0 ;
+		if(pdData != null){
+			Object object = pdData.get("MAX_ID");
+	        maxid = Integer.parseInt(object.toString());
+		}
 		for (PageData pageData : list) {
 			maxid++;
 			pageData.put("mainId", maxid);

@@ -11,9 +11,11 @@ package com.goudadong.dataimport.controller;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.goudadong.dataimport.service.BuildingService;
@@ -50,8 +52,11 @@ public class BuildingController {
 		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
 		PageData pdData = buildingService.getMaxId();
-		Object object = pdData.get("MAX_ID");
-		int maxid = Integer.parseInt(object.toString());
+		int maxid = 0 ;
+		if (pdData!=null) {
+			Object object = pdData.get("MAX_ID");
+			maxid = Integer.parseInt(object.toString());
+		}
 		for (PageData pageData : list) {
 			maxid++;
 			pageData.put("mainId", maxid);
@@ -65,5 +70,16 @@ public class BuildingController {
 		mv.addObject("o_list", o_List);
 		mv.setViewName("success");
 		return mv;
+	}
+	
+	@RequestMapping(value="delete")
+	@ResponseBody
+	public PageData delete(HttpServletRequest request) throws Exception{
+		PageData pd = new PageData(request);
+		//切换数据库
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
+	  	int result = buildingService.deleteAll(pd);
+	  	pd.put("total", result);
+	  	return pd;
 	}
 }

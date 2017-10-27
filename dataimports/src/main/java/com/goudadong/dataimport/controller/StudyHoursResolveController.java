@@ -45,8 +45,11 @@ public class StudyHoursResolveController {
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
 		List<PageData>list =  studyHoursResolveService.o_openCourseSchedule(null);
 		PageData pdData = studyHoursResolveService.getMaxId();
-		Object object = pdData.get("MAX_ID");
-		int maxid = Integer.parseInt(object.toString());
+		int maxid = 0;
+		if (pdData!=null) {
+			Object object = pdData.get("MAX_ID");
+			maxid = Integer.parseInt(object.toString());
+		}
 		for (PageData pageData : list) {
 			long openCourseScheduleId = Long.parseLong((pageData.get("MAINID")+"").trim());
 

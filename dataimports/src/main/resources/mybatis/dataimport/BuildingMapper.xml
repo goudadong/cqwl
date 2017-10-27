@@ -36,4 +36,60 @@
 			#{ISDELETED}
 		)
 	</insert>
+	
+	<!-- 删除所有原有数据 -->
+	<delete id="deleteAll" parameterType="pd">
+		<if test="delFlag==1">
+			delete from cqwu_campus
+		</if>
+		<if test="delFlag==2">
+			delete from cqwu_building
+		</if>
+		<if test="delFlag==3">
+			delete from cqwu_teachPlace
+		</if>
+		<if test="delFlag==4">
+			delete from cqwu_classroom
+		</if>
+		<if test="delFlag==5">
+			delete from cqwu_labBranch
+		</if>
+		<if test="delFlag==6">
+			delete from cqwu_gymnasium
+		</if>
+		<if test="delFlag==7">
+			delete from cqwu_institution
+		</if>
+		<if test="delFlag==8">
+			delete from cqwu_theoryCourse
+		</if>
+		<if test="delFlag==9">
+			delete from cqwu_openCourseSchedule
+		</if>
+		<if test="delFlag==10">
+			delete from cqwu_publicOptionalCourse
+		</if>
+		<if test="delFlag==11">
+			delete from cqwu_studyHoursResolve
+			
+		</if>
+		<if test="delFlag==12">
+			delete from cqwu_schoolCalendar
+		</if>
+		<if test="delFlag==13">
+			delete from cqwu_teach_Nature
+			delete from cqwu_teacherClass
+			delete from cqwu_scheduleMethod
+		</if>
+		<if test="delFlag==14">
+			delete from cqwu_selectCourseTotal
+		</if>
+		<if test="delFlag==15">
+			delete from cqwu_studentSelectResult
+		</if>
+		<if test="delFlag==16">
+			delete from cqwu_scheduResult
+		</if>
+	</delete>
+	
 </mapper>

@@ -49,4 +49,13 @@ public class BuildingService {
 	public void building_insert(PageData pd) throws Exception{
 		dao.save("BuildingMapper.building_insert", pd);
 	}
+	
+	/**
+	 * 删除所有表的数据
+	 * @return 
+	 * @throws Exception 
+	 */
+	public int deleteAll(PageData pd) throws Exception {
+		return (int) dao.delete("BuildingMapper.deleteAll", pd);
+	}
 }

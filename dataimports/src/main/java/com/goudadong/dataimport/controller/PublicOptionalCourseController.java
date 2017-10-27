@@ -52,12 +52,10 @@ public class PublicOptionalCourseController {
 		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
 		PageData pdData = publicOptionalCourseService.getMaxId();
-		Object object = pdData.get("MAX_ID");
 		int maxid = 0 ;
-		if(object == null){
-			maxid = 1;
-		}else{
-	        maxid = Integer.parseInt(object.toString());
+		if (pdData!=null) {
+			Object object = pdData.get("MAX_ID");
+			maxid = Integer.parseInt(object.toString());
 		}
 		for (PageData pageData : list) {		
 					
