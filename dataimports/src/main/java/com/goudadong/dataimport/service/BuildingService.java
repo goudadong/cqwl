@@ -56,6 +56,13 @@ public class BuildingService {
 	 * @throws Exception 
 	 */
 	public int deleteAll(PageData pd) throws Exception {
-		return (int) dao.delete("BuildingMapper.deleteAll", pd);
+		
+		int result = 0;
+		result = (int) dao.delete("BuildingMapper.deleteAll", pd);
+		if(pd.getString("delFlag").equals("13")){
+			result +=(int) dao.delete("BuildingMapper.teach_Nature", pd);
+			result +=(int) dao.delete("BuildingMapper.scheduleMethod", pd);
+		}
+		return result;
 	}
 }

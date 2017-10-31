@@ -48,7 +48,9 @@ public class OpenCourseScheduleController {
 	}
 	@RequestMapping(value="saveopenCourseSchedule")
 	public ModelAndView saveOpenCourseSchedule() throws Exception {
-//		List<PageData> list =  openCourseScheduleService.openCourseScheduleList(null);
+		//切换数据库
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+		List<PageData> list =  openCourseScheduleService.openCourseScheduleList(null);
 		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
 		PageData pdData = openCourseScheduleService.getMaxId();

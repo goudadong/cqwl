@@ -48,6 +48,7 @@ public class PublicOptionalCourseController {
 	}
 	@RequestMapping(value="savePublicOptionalCourse")
 	public ModelAndView savePublicOptionalCourse() throws Exception {
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 		List<PageData> list =  publicOptionalCourseService.publicOptionalCourseList(null);
 		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);

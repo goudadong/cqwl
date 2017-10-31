@@ -81,7 +81,7 @@ public class TeachTaskTask {
 					break;
 				}
 				if(result==0){
-					logger.error("受影响行数为0,同步失败！");
+					logger.error("受影响行数为0,同步失败！同步数据："+pageData);
 					pageData.put("opState", -1);
 					hwadee_OpTableService.hwadee_OpTable_update(pageData);
 				}if(result>0){
@@ -91,7 +91,7 @@ public class TeachTaskTask {
 				}
 				
 			} catch (Exception e) {
-				logger.error("同步出现异常" + e.getMessage());
+				logger.error("同步出现异常"+e.getMessage()+"同步数据："+pageData);
 				pageData.put("opState", -1);
 				hwadee_OpTableService.hwadee_OpTable_update(pageData);
 			}
@@ -151,7 +151,7 @@ public class TeachTaskTask {
 			}else if(flag==2){
 				result = detalData(pd,beforePd,flag);
 			}else{
-				logger.info("在更新或者新增时没有查到源数据，请排查！");
+				logger.info("在更新或者新增时没有查到源数据，请排查！查询字段："+pd);
 			}
 			// 切换数据库
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);

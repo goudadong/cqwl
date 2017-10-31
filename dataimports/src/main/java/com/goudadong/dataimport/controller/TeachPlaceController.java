@@ -46,6 +46,7 @@ public class TeachPlaceController {
 	}
 	@RequestMapping(value="saveteachPlace")
 	public ModelAndView saveTeachPlace() throws Exception {
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 		List<PageData> list =  teachPlaceService.teachPlaceList(null);
 		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
@@ -92,6 +93,7 @@ public class TeachPlaceController {
 	
 	@RequestMapping(value="saveClassRoom")
 	public ModelAndView saveClassRoom() throws Exception {
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 		List<PageData> list =  teachPlaceService.teachPlaceList(null);
 		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
@@ -131,6 +133,7 @@ public class TeachPlaceController {
 	}
 	@RequestMapping(value="savegymnasium")
 	public ModelAndView savegymnasium() throws Exception {
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 		List<PageData> list =  teachPlaceService.teachPlaceList(null);
 		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
@@ -170,6 +173,7 @@ public class TeachPlaceController {
 		}
 		@RequestMapping(value="savelabBranch")
 		public ModelAndView savelabBranch() throws Exception {
+			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 			List<PageData> list =  teachPlaceService.teachPlaceList(null);
 			//切换数据库
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);

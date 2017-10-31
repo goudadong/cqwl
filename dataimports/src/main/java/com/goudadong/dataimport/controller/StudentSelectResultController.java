@@ -48,6 +48,7 @@ public class StudentSelectResultController {
 	}
 	@RequestMapping(value="savestudentSelectResult")
 	public ModelAndView savestudentSelectResult() throws Exception {
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 		List<PageData> list =  studentSelectResultService.studentSelectResultList(null);
 		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);

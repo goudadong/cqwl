@@ -56,6 +56,7 @@ public class ScheduResultController {
 
 	@RequestMapping(value = "savescheduResult")
 	public ModelAndView savescheduResult() throws Exception {
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 		List<PageData> list = scheduResultService.scheduResultList(null);
 
 		for (PageData pageData : list) {

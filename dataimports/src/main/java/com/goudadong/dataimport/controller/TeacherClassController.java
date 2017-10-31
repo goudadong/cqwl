@@ -57,6 +57,7 @@ public class TeacherClassController {
 
 	@RequestMapping(value = "saveteacherClass")
 	public ModelAndView saveTeacherClass() throws Exception {
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 		List<PageData> list = teacherClassService.teacherClassList(null);
 		// 切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);

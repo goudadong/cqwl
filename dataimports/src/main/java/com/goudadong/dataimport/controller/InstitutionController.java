@@ -46,6 +46,8 @@ public class InstitutionController {
 	}
 	@RequestMapping(value="saveInstitution")
 	public ModelAndView saveInstitution() throws Exception {
+		//切换数据库
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 		List<PageData> list =  institutionService.institutionList(null);
 		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);

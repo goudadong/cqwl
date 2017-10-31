@@ -38,6 +38,7 @@ public class SchoolCalendarController {
 	
 	@RequestMapping(value="saveSchoolCalendar")
 	public ModelAndView saveSchoolCalendar() throws Exception {
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 		List<PageData> list =  schoolCalendarService.schoolCalendarList(null);
 		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);

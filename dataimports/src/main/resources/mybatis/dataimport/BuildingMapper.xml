@@ -76,10 +76,9 @@
 		<if test="delFlag==12">
 			delete from cqwu_schoolCalendar
 		</if>
+		<!-- 教学班 -->
 		<if test="delFlag==13">
-			delete from cqwu_teach_Nature
 			delete from cqwu_teacherClass
-			delete from cqwu_scheduleMethod
 		</if>
 		<if test="delFlag==14">
 			delete from cqwu_selectCourseTotal
@@ -89,6 +88,18 @@
 		</if>
 		<if test="delFlag==16">
 			delete from cqwu_scheduResult
+		</if>
+	</delete>
+	<!-- 行政班 -->
+	<delete id="teach_Nature" parameterType="pd">
+		<if test="delFlag==13">
+			delete from cqwu_teach_Nature
+		</if>
+	</delete>
+	<!-- 排课方法 -->
+	<delete id="scheduleMethod" parameterType="pd">
+		<if test="delFlag==13">
+			delete from cqwu_scheduleMethod
 		</if>
 	</delete>
 	

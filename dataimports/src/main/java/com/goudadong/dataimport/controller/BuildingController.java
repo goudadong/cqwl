@@ -48,6 +48,8 @@ public class BuildingController {
 	}
 	@RequestMapping(value="saveBuild")
 	public ModelAndView saveCampus() throws Exception {
+		//切换数据库
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 		List<PageData> list =  buildingService.buildingList(null);
 		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);

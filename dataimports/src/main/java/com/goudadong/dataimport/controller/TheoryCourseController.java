@@ -46,6 +46,7 @@ public class TheoryCourseController {
 	}
 	@RequestMapping(value="savetheoryCourse")
 	public ModelAndView saveTheoryCourse() throws Exception {
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 		List<PageData> list =  theoryCourseService.theoryCourseList(null);
 		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);

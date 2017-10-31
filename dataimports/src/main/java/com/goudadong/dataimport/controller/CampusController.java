@@ -46,6 +46,8 @@ public class CampusController {
 	}
 	@RequestMapping(value="saveCampus")
 	public ModelAndView saveCampus() throws Exception {
+		//切换数据库
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 		List<PageData> list =  campusService.campusList(null);
 		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
