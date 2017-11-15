@@ -32,4 +32,7 @@
 			#{ment_flag}
 		)
 	</insert>
+	<update id="update" parameterType="pd">
+		update CQWU_ORGANIZATION_EXT set ISINSTITUTION = 1 where  ORGANIZATIONID = #{orgId}
+	</update>
 </mapper>

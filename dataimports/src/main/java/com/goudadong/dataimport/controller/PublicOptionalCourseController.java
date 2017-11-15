@@ -10,6 +10,7 @@ package com.goudadong.dataimport.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.goudadong.dataimport.service.PublicOptionalCourseService;
 import com.goudadong.dataimport.util.DataSourceConst;
 import com.goudadong.dataimport.util.DataSourceContextHolder;
+import com.goudadong.dataimport.util.InstitutionUtil;
 import com.goudadong.dataimport.util.PageData;
 import com.goudadong.dataimport.util.SetXnUtil;
 
@@ -95,13 +97,20 @@ public class PublicOptionalCourseController {
 					if (pageData.containsKey("QTXS")) {
 						zxs += Float.parseFloat(pageData.get("QTXS").toString());
 					}
-					pageData.put("totalHours", zxs);
+					InstitutionUtil inUtil = new InstitutionUtil();
+					Map<String, String> map = inUtil.map;//承担单位对应的组织结构代码
+					String orgId = "";
+					if(pageData.containsKey("CDDW_ID")){
+						String dm = pageData.getString("CDDW_ID");
+						orgId = map.get(dm);
+					}
+					
 					maxid++;
+					pageData.put("CDDW_ID", orgId);
+					pageData.put("totalHours", zxs);
 					pageData.put("mainId", maxid);
 					pageData.put("ISVALID", 1);
 					pageData.put("ISDELETED", 0);
-					System.err.println("------------开始导入--------------");
-					System.err.println(pageData);
 					publicOptionalCourseService.publicOptionalCourse_insert(pageData);
 				}
 			}

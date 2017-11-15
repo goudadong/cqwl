@@ -3,7 +3,7 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ScheduResultMapper">
 	
-	<select id="scheduResultList" resultType="pd">
+	<select id="scheduResultList" resultType="pd" parameterType="pd">
 		SELECT
 			DISTINCT
 			a.[xn],
@@ -22,11 +22,11 @@
 		INNER JOIN T_ZY_ClassroomInfo c ON c.dm = a.JSM
 		INNER JOIN T_KB_Task d ON d.T_SKBJ = a.SKBJ and a.XN = d.xn AND a.XQ_ID = d.XQ_ID
 		WHERE 1 =1 and 
-			d.SkbjZCJC != '' and a.JCInfo!='Error' and a.stimezc!='' and a.stimezc!=',0' 
+			d.SkbjZCJC != '' and a.JCInfo!='Error' and a.stimezc!='' and a.stimezc!=',0' and a.xn=#{xn}
 			ORDER BY a.xn desc 
 	</select>
 	<select id="o_scheduResult" resultType="pd">
-		select * from cqwu_scheduResult
+		select * from cqwu_scheduResult where ROWNUM &gt;=1000
 	</select>
 	<select id="getMaxId" resultType="pd">
 		select max(MAINID) as max_Id from cqwu_scheduResult

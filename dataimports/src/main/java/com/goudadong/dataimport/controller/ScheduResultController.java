@@ -56,59 +56,71 @@ public class ScheduResultController {
 
 	@RequestMapping(value = "savescheduResult")
 	public ModelAndView savescheduResult() throws Exception {
-		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
-		List<PageData> list = scheduResultService.scheduResultList(null);
-
-		for (PageData pageData : list) {
-
-			// 转换学期
-			if (pageData.get("xq_id").equals("0")) {
-				pageData.put("semester", "一");
-			}
-			if (pageData.get("xq_id").equals("1")) {
-				pageData.put("semester", "二");
-			}
-			// 设置学年
-			SetXnUtil.setXn(pageData);
-			// 截取班号：如013120-002 ，截取002
-			String classCode = pageData.get("SKBJ").toString().split("\\-")[1].trim();
-			// 定义获取教学班id的主键
-			PageData pData = new PageData();
-			pData.put("xn", pageData.getString("xn").trim());
-			pData.put("xq", pageData.getString("semester").trim());
-			pData.put("kcid", pageData.getString("courseCode").trim());
-			pData.put("classCode", classCode.trim());
-			// 切换数据库
-			DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
-			
-			// 班级名称=课程名称_班级代码
-			PageData courseNamePd = new PageData();
-			courseNamePd = teacherClassService.getCourseName(pageData.getString("courseCode").trim());
-			if (courseNamePd != null && courseNamePd.containsKey("COURSENAME")) {
-				String courseName = courseNamePd.getString("COURSENAME");
-				pageData.put("className", courseName + "_" + classCode);
-			} else {
-				pageData.put("className", classCode);
-			}
-			
-			// 获取教学班id
-			PageData teaClassId = new PageData();
-			teaClassId = scheduResultService.getTeachClassId(pData);
-			if (null != teaClassId) {
-
-				pageData.put("TEACHCLASSID", Integer.parseInt(teaClassId.get("MAINID").toString()));
-				pageData.put("classCode", classCode);
-				pageData.put("ISVALID", 1);
-				pageData.put("ISDELETED", 0);
-				// 解析周次，节次，上课时间
-				Analyse(pageData);
-				//设置周次节次格式并导入数据
-				//setZcJcWeek(pageData);
+		Calendar calendar = Calendar.getInstance();
+		int endyear = calendar.get(Calendar.YEAR)+1;
+		int startYear = 2000;
+		for(int i =startYear;i<=endyear;i++){
+			System.err.println(i);
+			PageData xnpd = new PageData();
+			xnpd.put("xn", i);
+			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+			List<PageData> list = scheduResultService.scheduResultList(xnpd);
+			for (PageData pageData : list) {
+				
+				// 转换学期
+				if (pageData.get("xq_id").equals("0")) {
+					pageData.put("semester", "一");
+				}
+				if (pageData.get("xq_id").equals("1")) {
+					pageData.put("semester", "二");
+				}
+				// 设置学年
+				SetXnUtil.setXn(pageData);
+				// 截取班号：如013120-002 ，截取002
+				String classCode = pageData.get("SKBJ").toString().split("\\-")[1].trim();
+				// 定义获取教学班id的主键
+				PageData pData = new PageData();
+				pData.put("xn", pageData.getString("xn").trim());
+				pData.put("xq", pageData.getString("semester").trim());
+				pData.put("kcid", pageData.getString("courseCode").trim());
+				pData.put("classCode", classCode.trim());
+				// 切换数据库
+				DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
+				
+				// 班级名称=课程名称_班级代码
+				PageData courseNamePd = new PageData();
+				courseNamePd = teacherClassService.getCourseName(pageData.getString("courseCode").trim());
+				if (courseNamePd != null && courseNamePd.containsKey("COURSENAME")) {
+					String courseName = courseNamePd.getString("COURSENAME");
+					pageData.put("className", courseName + "_" + classCode);
+				} else {
+					pageData.put("className", classCode);
+				}
+				
+				// 获取教学班id
+				PageData teaClassId = new PageData();
+				teaClassId = scheduResultService.getTeachClassId(pData);
+				if (null != teaClassId) {
+					
+					pageData.put("TEACHCLASSID", Integer.parseInt(teaClassId.get("MAINID").toString()));
+					pageData.put("classCode", classCode);
+					pageData.put("ISVALID", 1);
+					pageData.put("ISDELETED", 0);
+					// 解析周次，节次，上课时间
+					try {
+						Analyse(pageData);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					//设置周次节次格式并导入数据
+					//setZcJcWeek(pageData);
+				}
 			}
 		}
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
 		List<PageData> o_List = scheduResultService.o_scheduResult(null);
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("list", list);
+	//	mv.addObject("list", list);
 		mv.addObject("o_list", o_List);
 		mv.setViewName("success");
 		return mv;

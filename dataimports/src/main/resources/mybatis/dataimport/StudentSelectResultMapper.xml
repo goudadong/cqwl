@@ -3,11 +3,20 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="StudentSelectResultMapper">
 	
-	<select id="studentSelectResultList" resultType="pd">
-		select [xn],[xq_id],b.user_xh XS_ID,KC_ID,[kcid] from T_KB_SelKC a INNER JOIN T_XJ_StudBaseInfo  b ON a.xs_id = b.XH
+	<select id="studentSelectResultList" resultType="pd" parameterType="pd">
+		SELECT
+			[xn],
+			[xq_id],
+			b.user_xh XS_ID,
+			KC_ID,
+			[kcid]
+		FROM
+			T_KB_SelKC a
+		INNER JOIN T_XJ_StudBaseInfo b ON a.xs_id = b.XH
+		where xn = #{xn}
 	</select>
 	<select id="o_studentSelectResult" resultType="pd">
-		select * from cqwu_studentSelectResult
+		select * from cqwu_studentSelectResult where ROWNUM &gt;=1000
 	</select>
 	<select id="getMaxId" resultType="pd">
 		select max(MAINID) as max_Id from cqwu_studentSelectResult

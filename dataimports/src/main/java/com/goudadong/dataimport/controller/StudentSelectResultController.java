@@ -9,6 +9,7 @@
 package com.goudadong.dataimport.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -48,51 +49,60 @@ public class StudentSelectResultController {
 	}
 	@RequestMapping(value="savestudentSelectResult")
 	public ModelAndView savestudentSelectResult() throws Exception {
-		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
-		List<PageData> list =  studentSelectResultService.studentSelectResultList(null);
+		Calendar calendar = Calendar.getInstance();
+		int endyear = calendar.get(Calendar.YEAR)+1;
+		int startYear = 2000;
+		for(int i =startYear;i<=endyear;i++){
+			System.err.println(i);
+			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+			PageData xnpd = new PageData();
+			xnpd.put("xn", i);
+			List<PageData> list =  studentSelectResultService.studentSelectResultList(xnpd);
+			//切换数据库
+			DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
+			PageData pdData = studentSelectResultService.getMaxId();
+			int maxid = 0 ;
+			if(pdData != null){
+				Object object = pdData.get("MAX_ID");
+				maxid = Integer.parseInt(object.toString());
+			}
+			for (PageData pageData : list) {
+				maxid++;
+				//设置班号
+				String classCode = pageData.get("KC_ID").toString().split("\\-")[1].trim();
+				if (pageData.get("xq_id").equals("0")) {
+					pageData.put("semester", "一");
+				}
+				if (pageData.get("xq_id").equals("1")) {
+					pageData.put("semester", "二");
+				}
+				pageData.put("classCode",classCode);
+				//定义获取教学班id的主键
+				PageData pData = new PageData();
+				SetXnUtil.setXn(pageData);
+				pData.put("xn", pageData.getString("xn").trim());
+				pData.put("xq", pageData.getString("semester").trim());
+				pData.put("kcid", pageData.getString("kcid").trim());
+				pData.put("classCode", pageData.getString("classCode").trim());
+				//定义获取教学班id
+				PageData pd = new PageData();
+				pd = studentSelectResultService.getTeachClassId(pData);
+				if (null!=pd) {
+					long teachClassId = Long.parseLong(pd.get("MAINID").toString());
+					pageData.put("teachClassId", teachClassId);
+					pageData.put("mainId", maxid);
+					pageData.put("ISVALID", 1);
+					pageData.put("ISDELETED", 0);
+					studentSelectResultService.studentSelectResult_insert(pageData);
+				}
+			}
+			
+		}
 		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
-		PageData pdData = studentSelectResultService.getMaxId();
-		int maxid = 0 ;
-		if(pdData != null){
-			Object object = pdData.get("MAX_ID");
-	        maxid = Integer.parseInt(object.toString());
-		}
-		for (PageData pageData : list) {
-			maxid++;
-			//设置班号
-			String classCode = pageData.get("KC_ID").toString().split("\\-")[1].trim();
-			if (pageData.get("xq_id").equals("0")) {
-				pageData.put("semester", "一");
-			}
-			if (pageData.get("xq_id").equals("1")) {
-				pageData.put("semester", "二");
-			}
-			pageData.put("classCode",classCode);
-			//定义获取教学班id的主键
-			PageData pData = new PageData();
-			SetXnUtil.setXn(pageData);
-			pData.put("xn", pageData.getString("xn").trim());
-			pData.put("xq", pageData.getString("semester").trim());
-			pData.put("kcid", pageData.getString("kcid").trim());
-			pData.put("classCode", pageData.getString("classCode").trim());
-			//定义获取教学班id
-			PageData pd = new PageData();
-			pd = studentSelectResultService.getTeachClassId(pData);
-			if (null!=pd) {
-				long teachClassId = Long.parseLong(pd.get("MAINID").toString());
-				pageData.put("teachClassId", teachClassId);
-				pageData.put("mainId", maxid);
-				pageData.put("ISVALID", 1);
-				pageData.put("ISDELETED", 0);
-				System.err.println("------------开始导入--------------");
-				System.err.println(pageData);
-				studentSelectResultService.studentSelectResult_insert(pageData);
-			}
-		}
 		List<PageData> o_List = studentSelectResultService.o_studentSelectResult(null);
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("list", list);
+		//mv.addObject("list", list);
 		mv.addObject("o_list", o_List);
 		mv.setViewName("success");
 		return mv;

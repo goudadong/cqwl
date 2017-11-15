@@ -9,6 +9,7 @@
 package com.goudadong.dataimport.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.goudadong.dataimport.service.InstitutionService;
 import com.goudadong.dataimport.util.DataSourceConst;
 import com.goudadong.dataimport.util.DataSourceContextHolder;
+import com.goudadong.dataimport.util.InstitutionUtil;
 import com.goudadong.dataimport.util.PageData;
 
 /**
@@ -50,19 +52,27 @@ public class InstitutionController {
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 		List<PageData> list =  institutionService.institutionList(null);
 		//切换数据库
+		//DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
+		//PageData pdData = institutionService.getMaxId();
+		//int maxid = 0 ;
+		//if (pdData!=null) {
+		//	Object object = pdData.get("MAX_ID");
+		//	maxid = Integer.parseInt(object.toString());
+		//}
+		//切换数据库
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
-		PageData pdData = institutionService.getMaxId();
-		int maxid = 0 ;
-		if (pdData!=null) {
-			Object object = pdData.get("MAX_ID");
-			maxid = Integer.parseInt(object.toString());
-		}
+		InstitutionUtil inUtil = new InstitutionUtil();
+		Map<String, String> map = inUtil.map;//承担单位对应的组织结构代码
 		for (PageData pageData : list) {
-			maxid++;
-			pageData.put("mainId", maxid);
-			pageData.put("ISVALID", 1);
-			pageData.put("ISDELETED", 0);
-			institutionService.institution_insert(pageData);
+		//	maxid++;
+			//pageData.put("mainId", maxid);
+			//pageData.put("ISVALID", 1);
+			//pageData.put("ISDELETED", 0);
+			//institutionService.institution_insert(pageData);
+			String dm = pageData.getString("DM");
+			String orgId = map.get(dm);
+			pageData.put("orgId", orgId);
+			institutionService.update(pageData);
 		}
 		List<PageData> o_List = institutionService.o_institution(null);
 		ModelAndView mv = new ModelAndView();

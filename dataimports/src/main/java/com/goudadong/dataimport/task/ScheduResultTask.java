@@ -320,8 +320,12 @@ public class ScheduResultTask {
 			if (null != teaClassId) {
 				pageData.put("TEACHCLASSID", Integer.parseInt(teaClassId.get("MAINID").toString()));
 				pageData.put("classCode", classCode);
-				// 解析周次，节次，上课时间
-				result  = Analyse(pageData,beforePd);
+				try {
+					// 解析周次，节次，上课时间
+					result  = Analyse(pageData,beforePd);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			
 			return result;

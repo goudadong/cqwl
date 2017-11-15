@@ -49,4 +49,11 @@ public class InstitutionService {
 	public void institution_insert(PageData pd) throws Exception{
 		dao.save("InstitutionMapper.institution_insert", pd);
 	}
+	/**
+	 * @param orgId
+	 * @throws Exception
+	 */
+	public void update(PageData orgId) throws Exception {
+		dao.update("InstitutionMapper.update", orgId);
+	}
 }
