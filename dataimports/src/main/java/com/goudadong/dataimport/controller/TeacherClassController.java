@@ -117,9 +117,10 @@ public class TeacherClassController {
 				classData.put("teachClassId", maxid);
 				classData.put("ISVALID", 1); 
 				classData.put("ISDELETED", 0);
-				classData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
-				teacherClassService.insertTeachNature(classData);
-				
+				if(!teacherClassService.getOrgClassId(bjdm).isEmpty()){
+					classData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
+					teacherClassService.insertTeachNature(classData);
+				}
 			}
 			classData.put("reasonCode", "0");
 			////班级人数

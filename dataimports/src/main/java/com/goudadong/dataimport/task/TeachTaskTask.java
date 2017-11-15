@@ -185,8 +185,10 @@ public class TeachTaskTask {
 				for (PageData bjdm : bjdms) { 
 					int teachClassId = Integer.parseInt(pageData.get("mainId").toString());
 					pageData.put("teachClassId", teachClassId);
-					pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
-					result = teacherClassService.natureClass_update(pageData);
+					if(!teacherClassService.getOrgClassId(bjdm).isEmpty()){
+						pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
+						result = teacherClassService.natureClass_update(pageData);
+					}
 				}
 				logger.info("受影响行数"+result+",执行方法natureClass_update");
 				result = teacherClassService.teacherClass_update(pageData);
@@ -227,8 +229,10 @@ public class TeachTaskTask {
 					maxid++;
 					pageData.put("naMainid", maxid);
 					pageData.put("teachClassId", teachClassId);
-					pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
-					result = teacherClassService.insertTeachNature(pageData);
+					if(!teacherClassService.getOrgClassId(bjdm).isEmpty()){
+						pageData.put("natureClassId", teacherClassService.getOrgClassId(bjdm));
+						result = teacherClassService.insertTeachNature(pageData);
+					}
 				}
 				logger.info("受影响行数"+result+",执行方法insertTeachNature");
 				result = teacherClassService.teacherClass_insert(pageData);
