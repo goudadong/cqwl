@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UpdateOrgIdMapper">
+	
+	<update id="updateTheoryCourse" parameterType="pd">
+		update cqwu_theoryCourse set institutionsCode = #{value} where institutionsCode=#{key}
+	</update>
+	<update id="updateOpenCourseSchedule" parameterType="pd">
+		update cqwu_openCourseSchedule set institutionCode = #{value} where institutionCode=#{key}
+	</update>
+	<update id="updatePublicOptionalCourse" parameterType="pd">
+		update cqwu_publicOptionalCourse set institutionCode = #{value} where institutionCode=#{key}
+	</update>
+	<update id="updateSelectCourseTotal" parameterType="pd">
+		update cqwu_selectCourseTotal set institutionCode = #{value} where institutionCode=#{key}
+	</update>
+</mapper>
