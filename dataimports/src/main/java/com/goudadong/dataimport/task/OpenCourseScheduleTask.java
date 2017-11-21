@@ -25,7 +25,6 @@ import com.goudadong.dataimport.util.DataSourceContextHolder;
 import com.goudadong.dataimport.util.InstitutionUtil;
 import com.goudadong.dataimport.util.PageData;
 import com.goudadong.dataimport.util.PropertiesUtil;
-import com.goudadong.dataimport.util.SetXnUtil;
 
 
 
@@ -231,12 +230,12 @@ public class OpenCourseScheduleTask {
 	 */
 	private PageData getDelOracleData(PageData pageData) throws Exception {
 		if (pageData.getString("xq").equals("0")) {
-			pageData.put("semester", "一");
+			pageData.put("semester", "1");
 		}
 		if (pageData.getString("xq").equals("1")) {
-			pageData.put("semester", "二");
+			pageData.put("semester", "2");
 		}
-		SetXnUtil.setXn(pageData);
+		//SetXnUtil.setXn(pageData);
 		pageData.put("KCID", pageData.getString("kcid"));
 		String majorCode = (pageData.get("ZY_ID") + "").trim();
 		DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
@@ -327,12 +326,12 @@ public class OpenCourseScheduleTask {
 		
 		
 		if (pageData.get("XQ_ID").equals("0")) {
-			pageData.put("semester", "一");
+			pageData.put("semester", "1");
 		}
 		if (pageData.get("XQ_ID").equals("1")) {
-			pageData.put("semester", "二");
+			pageData.put("semester", "2");
 		}
-		SetXnUtil.setXn(pageData);
+		//SetXnUtil.setXn(pageData);
 		//总学时
 		float zxs = 0;
 		//总学时

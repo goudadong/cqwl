@@ -12,7 +12,6 @@ import com.goudadong.dataimport.service.SchoolCalendarService;
 import com.goudadong.dataimport.util.DataSourceConst;
 import com.goudadong.dataimport.util.DataSourceContextHolder;
 import com.goudadong.dataimport.util.PageData;
-import com.goudadong.dataimport.util.SetXnUtil;
 
 /**
  * @author wulinmin
@@ -53,13 +52,13 @@ public class SchoolCalendarController {
 			pageData.put("mainId", maxid);
 			//转换学期
 			if ((pageData.get("xq_id")+"").trim().equals("0")) {
-				pageData.put("semester", "一");
+				pageData.put("semester", "1");
 			}
 			if ((pageData.get("xq_id")+"").trim().equals("1")) {
-				pageData.put("semester", "二");
+				pageData.put("semester", "2");
 			}
 			//设置学年
-			SetXnUtil.setXn(pageData);
+			//SetXnUtil.setXn(pageData);
 			pageData.put("ISVALID", 1);
 			pageData.put("ISDELETED", 0);
 			if (!pageData.containsKey("jq_start")) {

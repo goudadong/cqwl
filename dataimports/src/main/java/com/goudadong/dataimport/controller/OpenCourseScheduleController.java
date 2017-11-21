@@ -23,7 +23,6 @@ import com.goudadong.dataimport.util.DataSourceConst;
 import com.goudadong.dataimport.util.DataSourceContextHolder;
 import com.goudadong.dataimport.util.InstitutionUtil;
 import com.goudadong.dataimport.util.PageData;
-import com.goudadong.dataimport.util.SetXnUtil;
 
 /**
  * @author goudadong
@@ -120,12 +119,12 @@ public class OpenCourseScheduleController {
 			
 			
 			if (pageData.get("XQ_ID").equals("0")) {
-				pageData.put("semester", "一");
+				pageData.put("semester", "1");
 			}
 			if (pageData.get("XQ_ID").equals("1")) {
-				pageData.put("semester", "二");
+				pageData.put("semester", "2");
 			}
-			SetXnUtil.setXn(pageData);
+			//SetXnUtil.setXn(pageData);
 			//总学时
 			float zxs = 0;
 			//总学时

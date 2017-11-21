@@ -23,7 +23,6 @@ import com.goudadong.dataimport.service.TheoryCourseService;
 import com.goudadong.dataimport.util.DataSourceConst;
 import com.goudadong.dataimport.util.DataSourceContextHolder;
 import com.goudadong.dataimport.util.PageData;
-import com.goudadong.dataimport.util.SetXnUtil;
 
 /**
  * @author goudadong
@@ -75,10 +74,10 @@ public class TeacherClassController {
 			
 			//学期
 			if (classData.get("xq_id").equals("0")) {
-				classData.put("semester", "一");
+				classData.put("semester", "1");
 			}
 			if (classData.get("xq_id").equals("1")) {
-				classData.put("semester", "二");
+				classData.put("semester", "2");
 			}
 
 			//课程代码
@@ -125,7 +124,7 @@ public class TeacherClassController {
 			classData.put("reasonCode", "0");
 			////班级人数
 			//学年
-			SetXnUtil.setXn(classData);
+			//SetXnUtil.setXn(classData);
 			
 			int zxs = 0; //青果总学时
 			int zzxs = 0; //青果周学时
@@ -247,13 +246,13 @@ public class TeacherClassController {
 		for (PageData pageData : list) {
 			//学期
 			if (pageData.get("xq_id").equals("0")) {
-				pageData.put("semester", "一");
+				pageData.put("semester", "1");
 			}
 			if (pageData.get("xq_id").equals("1")) {
-				pageData.put("semester", "二");
+				pageData.put("semester", "2");
 			}
 			//学年
-			SetXnUtil.setXn(pageData);
+			//SetXnUtil.setXn(pageData);
 			// 截取班号：如013120-002 ，截取002
 			String classCode = pageData.get("T_SKBJ").toString().split("\\-")[1]
 					.trim();

@@ -22,7 +22,6 @@ import com.goudadong.dataimport.service.StudentSelectResultService;
 import com.goudadong.dataimport.util.DataSourceConst;
 import com.goudadong.dataimport.util.DataSourceContextHolder;
 import com.goudadong.dataimport.util.PageData;
-import com.goudadong.dataimport.util.SetXnUtil;
 
 /**
  * @author goudadong
@@ -71,15 +70,15 @@ public class StudentSelectResultController {
 				//设置班号
 				String classCode = pageData.get("KC_ID").toString().split("\\-")[1].trim();
 				if (pageData.get("xq_id").equals("0")) {
-					pageData.put("semester", "一");
+					pageData.put("semester", "1");
 				}
 				if (pageData.get("xq_id").equals("1")) {
-					pageData.put("semester", "二");
+					pageData.put("semester", "2");
 				}
 				pageData.put("classCode",classCode);
 				//定义获取教学班id的主键
 				PageData pData = new PageData();
-				SetXnUtil.setXn(pageData);
+				//SetXnUtil.setXn(pageData);
 				pData.put("xn", pageData.getString("xn").trim());
 				pData.put("xq", pageData.getString("semester").trim());
 				pData.put("kcid", pageData.getString("kcid").trim());

@@ -27,7 +27,6 @@ import com.goudadong.dataimport.service.TeacherClassService;
 import com.goudadong.dataimport.util.DataSourceConst;
 import com.goudadong.dataimport.util.DataSourceContextHolder;
 import com.goudadong.dataimport.util.PageData;
-import com.goudadong.dataimport.util.SetXnUtil;
 
 /**
  * @author goudadong
@@ -69,13 +68,13 @@ public class ScheduResultController {
 				
 				// 转换学期
 				if (pageData.get("xq_id").equals("0")) {
-					pageData.put("semester", "一");
+					pageData.put("semester", "1");
 				}
 				if (pageData.get("xq_id").equals("1")) {
-					pageData.put("semester", "二");
+					pageData.put("semester", "2");
 				}
 				// 设置学年
-				SetXnUtil.setXn(pageData);
+				//SetXnUtil.setXn(pageData);
 				// 截取班号：如013120-002 ，截取002
 				String classCode = pageData.get("SKBJ").toString().split("\\-")[1].trim();
 				// 定义获取教学班id的主键
@@ -225,7 +224,7 @@ public class ScheduResultController {
 		List<PageData> xlList = scheduResultService.findSchoolCalendar(null);
 		for (PageData pData : xlList) {
 			// 设置学年
-			SetXnUtil.setXn(pData);
+			//SetXnUtil.setXn(pData);
 			String xn_1 = pData.getString("xn");
 			String xn_2 = pageData.getString("xn");
 			String xq_1 = pData.getString("xq_id").trim();

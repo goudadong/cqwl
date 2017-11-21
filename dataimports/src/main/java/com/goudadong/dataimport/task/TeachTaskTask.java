@@ -17,7 +17,6 @@ import com.goudadong.dataimport.util.DataSourceConst;
 import com.goudadong.dataimport.util.DataSourceContextHolder;
 import com.goudadong.dataimport.util.PageData;
 import com.goudadong.dataimport.util.PropertiesUtil;
-import com.goudadong.dataimport.util.SetXnUtil;
 
 public class TeachTaskTask {
 
@@ -259,13 +258,13 @@ public class TeachTaskTask {
 	private PageData getDelOracleData(PageData pageData) throws Exception {
 		//学期
 		if (pageData.get("xq").equals("0")) {
-			pageData.put("semester", "一");
+			pageData.put("semester", "1");
 		}
 		if (pageData.get("xq").equals("1")) {
-			pageData.put("semester", "二");
+			pageData.put("semester", "2");
 		}
 		//学年
-		SetXnUtil.setXn(pageData);
+		//SetXnUtil.setXn(pageData);
 		//课程代码
 		pageData.put("KCDM", pageData.get("skbj").toString().split("\\-")[0]);
 		// 截取班号：如013120-002 ，截取002
@@ -293,10 +292,10 @@ public class TeachTaskTask {
 
 		// 学期
 		if (pageData.get("xq_id").equals("0")) {
-			pageData.put("semester", "一");
+			pageData.put("semester", "1");
 		}
 		if (pageData.get("xq_id").equals("1")) {
-			pageData.put("semester", "二");
+			pageData.put("semester", "2");
 		}
 
 		// 课程代码
@@ -360,7 +359,7 @@ public class TeachTaskTask {
 
 		}
 		// 学年
-		SetXnUtil.setXn(pageData);
+		//SetXnUtil.setXn(pageData);
 		try {
 			PageData pData = new PageData();
 			if(!beforePd.isEmpty()){
