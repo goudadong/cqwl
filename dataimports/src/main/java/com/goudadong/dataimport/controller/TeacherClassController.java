@@ -156,8 +156,6 @@ public class TeacherClassController {
 							classData.put("manageWeekHours", 0);//理论排课系统周学时
 						}
 						
-						//插入理论学时排课方式，实践排课不插入
-						scheduleMethod_insert(classData);
 					}else {
 						classData.put("manageSysCode", "002"); //实践排课系统
 						classData.put("manageHours", zxs); //总学时
@@ -169,16 +167,15 @@ public class TeacherClassController {
 				classData.put("manageHours", zxs); //总学时
 				classData.put("manageWeekHours", zzxs); //周学时
 				
-				//插入理论学时排课方式，实践排课不插入
-				scheduleMethod_insert(classData); 
 			}
-			
-
-
 			
 			classData.put("ISVALID", 1);
 			classData.put("ISDELETED", 0);
-			teacherClassService.teacherClass_insert(classData);
+		    int  result =	teacherClassService.teacherClass_insert(classData);
+			//插入理论学时排课方式，实践排课不插入
+		    if(result>0){
+		    	scheduleMethod_insert(classData); 
+		    }
 			
 		}
 //		List<PageData> o_List = teacherClassService.o_teacherClass(null);

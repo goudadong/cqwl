@@ -101,4 +101,24 @@ public class Hwadee_OpTableService {
 	public String  findByColums_beforeStuSelect(PageData beforePd) throws Exception {
 		return (String)dao.findForObject("Hwadee_OptableMapper.findByColums_beforeStuSelect", beforePd);
 	}
+	
+	public void updateCounter() throws Exception{
+		dao.update("Hwadee_OptableMapper.updateCounter1", null);
+		dao.update("Hwadee_OptableMapper.updateCounter2", null);
+		dao.update("Hwadee_OptableMapper.updateCounter3", null);
+		dao.update("Hwadee_OptableMapper.updateCounter4", null);
+		dao.update("Hwadee_OptableMapper.updateCounter5", null);
+		dao.update("Hwadee_OptableMapper.updateCounter6", null);
+		dao.update("Hwadee_OptableMapper.updateCounter7", null);
+		dao.update("Hwadee_OptableMapper.updateCounter8", null);
+		dao.update("Hwadee_OptableMapper.updateCounter9", null);
+		dao.update("Hwadee_OptableMapper.updateCounter10", null);
+		dao.update("Hwadee_OptableMapper.updateCounter11", null);
+		dao.update("Hwadee_OptableMapper.updateCounter12", null);
+		dao.update("Hwadee_OptableMapper.updateCounter13", null);
+		dao.update("Hwadee_OptableMapper.updateCounter14", null);
+		dao.update("Hwadee_OptableMapper.updateCounter15", null);
+		dao.update("Hwadee_OptableMapper.updateCounter16", null);
+		dao.update("Hwadee_OptableMapper.updateCounter17", null);
+	}
 }

@@ -51,6 +51,9 @@ public class ScheduResultTask {
 						DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 						pd.put("tableName", PropertiesUtil.getValueByKey(Const.SYSTEM_PROPERTIES_CONST, "T_4"));
 						SyncData(hwadee_OpTableService.opTableList(pd));
+						//切换数据库
+						DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
+						hwadee_OpTableService.updateCounter();
 					} catch (Exception e) {
 						logger.error(MessageFormat.format("同步失败", e.getMessage()));
 					}
@@ -368,7 +371,16 @@ public class ScheduResultTask {
 						}
 					}
 				}else{//表示只有一周的情况如18周
-					result = savesData(pageData,Integer.parseInt(zcs[0]));
+					int j = Integer.parseInt(zcs[0]);
+					if (pageData.getString("dsz").equals("0")) {//不分单双周
+						saveData(pageData,j);
+					}
+					if (j%2!=0 && pageData.getString("dsz").equals("1")) {//单周
+						saveData(pageData,j);
+					}
+					if (j%2==0  && pageData.getString("dsz").equals("2")) {//双周
+						saveData(pageData,j);
+					}
 				}
 			return result ;
 		}

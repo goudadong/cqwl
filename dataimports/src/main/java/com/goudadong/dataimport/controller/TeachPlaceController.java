@@ -197,6 +197,20 @@ public class TeachPlaceController {
 			mv.setViewName("success");
 			return mv;
 		}
-	
+		
+		@RequestMapping(value="updateSchedleMethod")
+		public ModelAndView updateSchedleMethod() throws Exception {
+			//切换数据库
+			DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
+			PageData pd = new PageData();
+			for(int i=44000;i<70000;i=i+1000){
+				pd.put("start", i);
+				pd.put("end", i+1000);
+				teachPlaceService.updateSchedleMethod(pd);
+			}
+			ModelAndView mv = new ModelAndView();
+			mv.setViewName("success");
+			return mv;
+		}
 	
 }

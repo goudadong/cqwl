@@ -167,7 +167,16 @@ public class ScheduResultController {
 					}
 				}
 			}else{//表示只有一周的情况如18周
-				saveData(pageData,Integer.parseInt(zcs[0]));
+				int j = Integer.parseInt(zcs[0]);
+				if (pageData.getString("dsz").equals("0")) {//不分单双周
+					saveData(pageData,j);
+				}
+				if (j%2!=0 && pageData.getString("dsz").equals("1")) {//单周
+					saveData(pageData,j);
+				}
+				if (j%2==0  && pageData.getString("dsz").equals("2")) {//双周
+					saveData(pageData,j);
+				}
 			}
 	}
 

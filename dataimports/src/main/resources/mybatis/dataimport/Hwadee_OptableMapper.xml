@@ -98,4 +98,55 @@
 		where xh = #{xh} and xn=#{xn} and xq_id =#{xq}
 	</select>
 	
+	<update id="updateCounter1">
+		UPDATE COUNTER c SET c.CURRENTID = (select max(mainid) from CQWU_SELECTCOURSETOTAL ) WHERE "NAME" = 'com.cqwu.education.selectManage.preSelect.model.SelectCourseTotal'
+	</update>
+	<update id="updateCounter2">
+		UPDATE COUNTER c set c.CURRENTID = (select max(mainid) from CQWU_SCHEDURESULT ) WHERE "NAME" = 'com.cqwu.education.teachingArrange.arrangeSchedule.model.ScheduResult'
+	</update>
+	<update id="updateCounter3">
+		update COUNTER c set c.CURRENTID = (select max(mainid) from  CQWU_SCHEDULEMETHOD) WHERE "NAME"='com.cqwu.education.teachingArrange.setTheoryTeaching.model.ScheduleMethod'
+	</update>
+	<update id="updateCounter4">
+		update COUNTER c set c.CURRENTID = (select max(mainid) from  CQWU_STUDENTSELECTRESULT) WHERE "NAME"='com.cqwu.education.selectManage.preSelect.model.StudentSelectResult'
+	</update>
+	<update id="updateCounter5">
+		update COUNTER c set c.CURRENTID = (select max(mainid) from  CQWU_TEACHERCLASS) WHERE "NAME"='com.cqwu.education.selectManage.preSelect.model.TeacherClass'
+	</update>
+	<update id="updateCounter6">
+		update COUNTER c set c.CURRENTID = (select max(mainid) from  cqwu_openCourseSchedule) WHERE "NAME"='com.cqwu.education.teachingArrange.openCourse.model.OpenCourseSchedule'
+	</update>
+	<update id="updateCounter7">
+		update COUNTER c set c.CURRENTID = (select max(mainid) from  cqwu_theoryCourse) WHERE "NAME"='com.cqwu.education.talentScheme.model.TheoryCourse'
+	</update>
+	<update id="updateCounter8">
+		update COUNTER c set c.CURRENTID = (select max(mainid) from  cqwu_institution) WHERE "NAME"='com.cqwu.education.basicInfo.model.Institution'
+	</update>
+	<update id="updateCounter9">
+		update COUNTER c set c.CURRENTID = (select max(mainid) from  cqwu_teachPlace) WHERE "NAME"='com.cqwu.education.basicInfo.model.TeachPlace'
+	</update>
+	<update id="updateCounter10">
+		update COUNTER c set c.CURRENTID = (select max(mainid) from  cqwu_building) WHERE "NAME"='com.cqwu.education.basicInfo.model.Building'
+	</update>
+	<update id="updateCounter11">
+		update COUNTER c set c.CURRENTID = (select max(mainid) from  cqwu_campus) WHERE "NAME"='com.cqwu.education.basicInfo.model.Campus'
+	</update>
+	<update id="updateCounter12">
+		update COUNTER c set c.CURRENTID = (select max(mainid) from  cqwu_gymnasium) WHERE "NAME"='com.cqwu.education.basicInfo.model.Gymnasium'
+	</update>
+	<update id="updateCounter13">
+		update COUNTER c set c.CURRENTID = (select max(mainid) from  cqwu_labBranch) WHERE "NAME"='com.cqwu.education.basicInfo.model.LabBranch'
+	</update>
+	<update id="updateCounter14">
+		update COUNTER c set c.CURRENTID = (select max(mainid) from  cqwu_classroom) WHERE "NAME"='com.cqwu.education.basicInfo.model.Classroom'
+	</update>
+	<update id="updateCounter15">
+		update COUNTER c set c.CURRENTID = (select max(mainid) from  cqwu_publicOptionalCourse) WHERE "NAME"='com.cqwu.education.teachingArrange.openCourse.model.PublicOptionalCourse'
+	</update>
+	<update id="updateCounter16">
+		update COUNTER c set c.CURRENTID = (select max(mainid) from  cqwu_schoolCalendar) WHERE "NAME"='com.cqwu.education.teachingArrange.setPara.model.SchoolCalendar'
+	</update>
+	<update id="updateCounter17">
+		update COUNTER c set c.CURRENTID = (select max(mainid) from  cqwu_teach_Nature) WHERE "NAME"='com.cqwu.education.teachingArrange.setTheoryTeaching.model.Teach_Nature'
+	</update>
 </mapper>

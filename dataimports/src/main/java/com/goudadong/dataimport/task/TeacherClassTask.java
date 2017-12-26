@@ -47,6 +47,9 @@ public class TeacherClassTask {
 						DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 						pd.put("tableName", PropertiesUtil.getValueByKey(Const.SYSTEM_PROPERTIES_CONST, "T_2"));
 						SyncData(hwadee_OpTableService.opTableList(pd));
+						//切换数据库
+						DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
+						hwadee_OpTableService.updateCounter();
 					} catch (Exception e) {
 						logger.error(MessageFormat.format("同步失败", e.getMessage()));
 					}

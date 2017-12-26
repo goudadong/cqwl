@@ -126,4 +126,25 @@
 			1
 		)
 	</insert>
+	
+	<update id="updateSchedleMethod" parameterType="pd">
+		UPDATE CQWU_SCHEDULEMETHOD ss
+			SET SS.TEACHPLACETYPE = (
+				SELECT
+					T .TEACHPLACETYPE
+				FROM
+					(
+						SELECT 
+							A .TEACHPLACETYPE,
+							b.TEACHCLASSID
+						FROM
+							CQWU_TEACHPLACE A
+						INNER JOIN CQWU_SCHEDURESULT b ON A .TEACHPLACECODE = b.TEACHPLACECODE
+					) T
+				WHERE
+					SS.TEACHERCLASSID = T.TEACHCLASSID and ROWNUM = 1
+			)
+			where ss.mainId >#{start} and ss.mainId&lt;=#{end}
+
+	</update>
 </mapper>

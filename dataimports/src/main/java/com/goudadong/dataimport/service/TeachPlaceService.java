@@ -61,4 +61,8 @@ public class TeachPlaceService {
 	public void labBranch_insert(PageData pd) throws Exception {
 		dao.save("TeachPlaceMapper.labBranch_insert", pd);
 	}
+	
+	public void updateSchedleMethod(PageData pd) throws Exception{
+		dao.update("TeachPlaceMapper.updateSchedleMethod", pd);
+	}
 }
