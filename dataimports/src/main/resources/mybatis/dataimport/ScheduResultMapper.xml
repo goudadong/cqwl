@@ -117,10 +117,10 @@
 	
 	<select id="findSchoolCalendar" resultType="pd">
 		SELECT
-			xn,
+			RTRIM(xn) xn,
 			kxrq,
 			fjrq,
-			xq_id
+			RTRIM(xq_id) xq_id
 		FROM
 			T_JH_SetXL
 	</select>

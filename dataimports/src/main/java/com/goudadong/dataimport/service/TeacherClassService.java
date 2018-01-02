@@ -167,4 +167,15 @@ public class TeacherClassService {
 		return (int) dao.delete("TeacherClassMapper.natureClass_delete", pageData);
 		
 	}
+	
+	
+	/**
+	 * 更新教学班人数
+	 * @param pageData
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateTeachClassRs(PageData pageData) throws Exception {
+		return (int) dao.update("TeacherClassMapper.updateTeachClassRs", pageData);
+	}
 }

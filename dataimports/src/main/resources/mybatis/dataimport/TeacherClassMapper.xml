@@ -226,4 +226,16 @@
 	<select id="getCourseName" resultType="pd">
 		select COURSENAME from cqwu_theoryCourse where courseCode = #{0}
 	</select>
+	
+	<!-- 更新教学班人数 -->
+	<update id="updateTeachClassRs" parameterType="pd">
+		UPDATE CQWU_TEACHERCLASS
+			SET STUNUM = #{stuNum,jdbcType=INTEGER}
+		WHERE
+			SCHOOLYEAR = #{xn,jdbcType=VARCHAR}
+			AND SEMESTER = #{semester,jdbcType=VARCHAR}
+			AND COURSECODE = #{KCDM,jdbcType=VARCHAR}
+			AND CLASSCODE = #{classCode,jdbcType=VARCHAR}
+	</update>
+	
 </mapper>

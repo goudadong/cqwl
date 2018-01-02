@@ -236,6 +236,11 @@ public class TeacherClassController {
 	}
 	
 	
+	/**
+	 * 更新教学班学年学期
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value="/update")
 	public ModelAndView updateTeacherClass() throws Exception{
 		ModelAndView mv = new ModelAndView();
@@ -265,6 +270,43 @@ public class TeacherClassController {
 		mv.setViewName("success");
 		return mv;
 	}
+	
+	/**
+	 * 更新教学班班级人数
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/updatebjrs")
+	public ModelAndView updateTeachClassRs() throws Exception{
+		ModelAndView mv = new ModelAndView();
+		DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
+		List<PageData> list = teacherClassService.teacherClassList(null);
+		for (PageData classData : list) {
+			String courseCode = classData.getString("KCDM").trim();
+			//学期
+			if (classData.get("xq_id").equals("0")) {
+				classData.put("semester", "1");
+			}
+			if (classData.get("xq_id").equals("1")) {
+				classData.put("semester", "2");
+			}
+
+			//课程代码
+			classData.put("KCDM", courseCode);
+			// 截取班号：如013120-002 ，截取002
+			String classCode = classData.get("T_SKBJ").toString().split("\\-")[1]
+					.trim();
+			classData.put("classCode", classCode);
+			// 切换数据库
+			DataSourceContextHolder.setDataSourceType(DataSourceConst.ORACLE);
+			teacherClassService.updateTeachClassRs(classData);
+			
+		}
+		mv.setViewName("success");
+		return mv;
+	}
+	
+	
 	
 	
 	

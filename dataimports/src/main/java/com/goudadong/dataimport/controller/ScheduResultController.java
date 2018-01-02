@@ -234,7 +234,7 @@ public class ScheduResultController {
 		for (PageData pData : xlList) {
 			// 设置学年
 			//SetXnUtil.setXn(pData);
-			String xn_1 = pData.getString("xn");
+			String xn_1 = pData.getString("xn").trim();
 			String xn_2 = pageData.getString("xn");
 			String xq_1 = pData.getString("xq_id").trim();
 			String xq_2 = pageData.getString("xq_id");
