@@ -265,6 +265,7 @@ public class StudentSelectResultTask {
 		pData.put("xq", pageData.getString("semester").trim());
 		pData.put("kcid", pageData.getString("kcid").trim());
 		pData.put("classCode", pageData.getString("classCode").trim());
+		pageData.put("xn", pageData.getString("xn").trim());
 		//定义获取教学班id
 		PageData pd = new PageData();
 		pd = studentSelectResultService.getTeachClassId(pData);

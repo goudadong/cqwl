@@ -76,6 +76,7 @@ public class StudentSelectResultController {
 					pageData.put("semester", "2");
 				}
 				pageData.put("classCode",classCode);
+				pageData.put("xn", pageData.getString("xn").trim());
 				//定义获取教学班id的主键
 				PageData pData = new PageData();
 				//SetXnUtil.setXn(pageData);

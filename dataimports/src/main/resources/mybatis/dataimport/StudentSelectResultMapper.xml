@@ -37,6 +37,8 @@
 			MAINID,
 			ISVALID,
 			ISDELETED,
+			SEMESTER,
+			SCHOOLYEAR,
 			teachClassId,
 			studentCode,
 			flag
@@ -45,6 +47,8 @@
 			#{mainId,jdbcType=INTEGER},
 			#{ISVALID},	
 			#{ISDELETED},
+			#{semester},
+			#{xn},
 			#{teachClassId},
 			#{XS_ID,jdbcType=VARCHAR},	
 			2
