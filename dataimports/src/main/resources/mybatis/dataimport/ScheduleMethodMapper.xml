@@ -15,6 +15,10 @@
 			assign,
 			teachPlaceType,
 			capacity,
+			methodFlag,
+			teacherCode,
+			conSections,
+			ALTERNATION,
 			isValid,
 			isDeleted,
 			dataRights
@@ -27,6 +31,10 @@
 			#{assignCode},
 			#{teachPlaceType},
 			#{capacity},
+			#{methodFlag},
+			#{teacherCode},
+			#{conSections},
+			0,
 			#{isValid},
 			#{isDeleted},
 			#{dataRights}

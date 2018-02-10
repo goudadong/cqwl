@@ -52,7 +52,6 @@ public class StudentSelectResultController {
 		int endyear = calendar.get(Calendar.YEAR)+1;
 		int startYear = 2000;
 		for(int i =startYear;i<=endyear;i++){
-			System.err.println(i);
 			DataSourceContextHolder.setDataSourceType(DataSourceConst.SQLSERVER);
 			PageData xnpd = new PageData();
 			xnpd.put("xn", i);

@@ -442,6 +442,11 @@ public class TeachTaskTask {
 		scheduleMethodData.put("assignCode", "");
 		scheduleMethodData.put("teachPlaceType", "01"); //教室类型：一般教室
 		scheduleMethodData.put("capacity", classData.get("stuNum"));
+		scheduleMethodData.put("methodFlag", "1");//排法标识（内部用，默认1）
+		scheduleMethodData.put("teacherCode", classData.getString("gh").trim());
+		if(classData.containsKey("T_JS")){
+			scheduleMethodData.put("conSections", classData.getString("T_JS").trim());//连上节数
+		}
 		scheduleMethodData.put("isValid", "1");
 		scheduleMethodData.put("isDeleted", "0");
 		scheduleMethodData.put("dataRights", classData.get("manageWeekHours")); ////排课系统周学时--暂时存此字段
